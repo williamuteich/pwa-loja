@@ -21,25 +21,32 @@ export default function PrivateLayout({ children }: { children: ReactNode }) {
                     {children}
                 </div>
 
-                <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] h-20 bg-white/95 backdrop-blur-xl border-t-2 border-slate-100 px-12 flex items-center justify-between z-50">
-                    <Link href="/dashboard" className={`flex flex-col items-center gap-1 transition-all ${isActive("/dashboard") ? "text-blue-600 scale-110" : "text-slate-400"}`}>
-                        <div className={`p-2 rounded-xl border ${isActive("/dashboard") ? "bg-blue-50 border-blue-100" : "bg-transparent border-transparent"}`}>
-                            <LayoutGrid className="w-6 h-6" />
-                        </div>
-                    </Link>
+                <div className="fixed bottom-6 left-0 right-0 flex justify-center z-50 px-4">
+                    <nav className="w-full max-w-[440px] h-20 bg-slate-900 border-t-2 border-blue-600/20 rounded-[2rem] px-10 flex items-center justify-between shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
+                        
+                        <Link href="/dashboard" className="flex flex-col items-center gap-1 transition-all active:scale-90">
+                            <div className={`p-2 rounded-xl transition-all duration-300 ${isActive("/dashboard") ? "text-blue-400" : "text-slate-500 hover:text-slate-300"}`}>
+                                <LayoutGrid className="w-6 h-6" strokeWidth={isActive("/dashboard") ? 2.5 : 2} />
+                            </div>
+                            <span className={`text-[8px] font-black uppercase tracking-[0.2em] transition-all ${isActive("/dashboard") ? "text-blue-400" : "text-slate-500"}`}>Painel</span>
+                        </Link>
+                        
+                        <Link href="/dashboard/products" className="flex flex-col items-center gap-1 transition-all active:scale-90">
+                            <div className={`p-2 rounded-xl transition-all duration-300 ${isActive("/dashboard/products") ? "text-blue-400" : "text-slate-500 hover:text-slate-300"}`}>
+                                <Package className="w-6 h-6" strokeWidth={isActive("/dashboard/products") ? 2.5 : 2} />
+                            </div>
+                            <span className={`text-[8px] font-black uppercase tracking-[0.2em] transition-all ${isActive("/dashboard/products") ? "text-blue-400" : "text-slate-500"}`}>Produtos</span>
+                        </Link>
+                        
+                        <Link href="/dashboard/inventory/scan" className="flex flex-col items-center gap-1 transition-all active:scale-90">
+                            <div className={`p-2 rounded-xl transition-all duration-300 ${isActive("/dashboard/inventory/scan") ? "text-blue-400" : "text-slate-500 hover:text-slate-300"}`}>
+                                <Barcode className="w-6 h-6" strokeWidth={isActive("/dashboard/inventory/scan") ? 2.5 : 2} />
+                            </div>
+                            <span className={`text-[8px] font-black uppercase tracking-[0.2em] transition-all ${isActive("/dashboard/inventory/scan") ? "text-blue-400" : "text-slate-500"}`}>Scanner</span>
+                        </Link>
 
-                    <Link href="/dashboard/products" className={`flex flex-col items-center gap-1 transition-all ${isActive("/dashboard/products") ? "text-blue-600 scale-110" : "text-slate-400"}`}>
-                        <div className={`p-2 rounded-xl border ${isActive("/dashboard/products") ? "bg-blue-50 border-blue-100" : "bg-transparent border-transparent"}`}>
-                            <Package className="w-6 h-6" />
-                        </div>
-                    </Link>
-
-                    <Link href="/dashboard/inventory/scan" className={`flex flex-col items-center gap-1 transition-all ${isActive("/dashboard/inventory/scan") ? "text-blue-600 scale-110" : "text-slate-400"}`}>
-                        <div className={`p-2 rounded-xl border ${isActive("/dashboard/inventory/scan") ? "bg-blue-50 border-blue-100" : "bg-transparent border-transparent"}`}>
-                            <Barcode className="w-6 h-6" />
-                        </div>
-                    </Link>
-                </nav>
+                    </nav>
+                </div>
             </main>
         </div>
     );

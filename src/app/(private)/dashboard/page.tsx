@@ -5,10 +5,8 @@ import {
     Search, 
     Barcode, 
     LogOut,
-    Store,
     User,
-    QrCode,
-    Package
+    QrCode
 } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -32,9 +30,11 @@ async function DashboardContent() {
                 
                 <div className="flex items-center justify-between relative z-10">
                     <div className="flex flex-col gap-1">
-                        <div className="flex items-center gap-2 text-blue-400 mb-2">
-                            <Store className="w-4 h-4" />
-                            <span className="text-[10px] font-black uppercase tracking-[0.3em]">Operação de Loja</span>
+                        <div className="flex items-center gap-3 mb-2">
+                            <div className="w-12 h-12 rounded-xl overflow-hidden flex items-center justify-center bg-white shadow-lg">
+                                <img src="/logo-icon.png" alt="Logo Icon" className="w-full h-full object-cover scale-110" />
+                            </div>
+                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-400">Operação de Loja</span>
                         </div>
                         <h1 className="text-3xl font-black text-white tracking-tight leading-none">
                             Olá, <span className="text-blue-600 font-black">{firstName}</span>
@@ -48,12 +48,12 @@ async function DashboardContent() {
                             <div className="h-8 w-px bg-slate-800"></div>
                             <div className="flex flex-col">
                                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Status</span>
-                                <span className="text-xs font-bold text-emerald-400 uppercase tracking-tighter">Sincronizado</span>
+                                <span className="text-xs font-bold text-emerald-400 uppercase tracking-tighter">Ativo</span>
                             </div>
                         </div>
                     </div>
 
-                    <div className="w-16 h-16 rounded-xl bg-slate-800 border border-slate-700 p-1 shadow-inner overflow-hidden">
+                    <div className="w-26 h-26 rounded-xl bg-slate-800 border border-slate-700 p-1 shadow-inner overflow-hidden">
                         {session?.user?.image ? (
                             <img src={session.user.image} alt="Profile" className="w-full h-full object-cover rounded-lg" />
                         ) : (
