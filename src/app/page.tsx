@@ -1,70 +1,50 @@
-import Image from "next/image"
-import ButtonLogin from "./components/buttonLogin"
-import { InstallGuard } from "./components/InstallPrompt"
-import { ShoppingBag, BarChart3, Scan } from "lucide-react"
+"use client";
 
-export default function Home() {
+import { signIn } from "next-auth/react";
+import { Package, Smartphone, ShieldCheck } from "lucide-react";
+
+export default function LoginPage() {
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-center bg-slate-50 overflow-hidden px-4 py-8 font-sans">
-      <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[40%] bg-orange-500/10 rounded-full blur-[60px]"></div>
-      <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[40%] bg-blue-500/10 rounded-full blur-[60px]"></div>
-
-      <div className="relative z-10 w-full flex flex-col items-center mt-auto mb-auto">
-
-        <div className="mb-10 flex flex-col items-center animate-fluid-up">
-          <div className="w-28 h-28 relative mb-6 rounded-[2rem] overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.08)] bg-white p-3 border border-slate-100">
-            <Image
-              src="/logo.png"
-              alt="StoreFlow"
-              fill
-              sizes="(max-width: 768px) 112px, 112px"
-              className="object-contain p-2"
-              priority
-            />
+    <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center px-6 py-12">
+      <div className="w-full max-w-sm bg-white border-2 border-slate-100 rounded-2xl p-8 shadow-sm animate-in fade-in zoom-in-95 duration-500">
+        <div className="flex flex-col items-center text-center gap-4 mb-10">
+          <div className="w-16 h-16 bg-slate-900 rounded-xl flex items-center justify-center shadow-lg shadow-slate-200">
+            <Package className="text-white w-8 h-8" strokeWidth={2.5} />
           </div>
-          <h1 className="text-[2.5rem] leading-none font-black text-slate-800 tracking-tight">StoreFlow</h1>
-          <p className="text-slate-500 text-[10px] font-bold uppercase tracking-[0.25em] mt-3">Sistema de Estoque</p>
-        </div>
-
-        <div className="w-full bg-white/90 backdrop-blur-md border border-white/60 rounded-[2.5rem] p-8 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] animate-fluid-up [animation-delay:150ms]">
-          <div className="text-center mb-8">
-            <h2 className="text-xl font-extrabold text-slate-800 tracking-tight">Acesso ao Sistema</h2>
-            <p className="text-slate-500 text-[13px] mt-2 leading-relaxed px-2">Conecte sua conta para gerenciar produtos e sincronizar seu e-commerce.</p>
-          </div>
-
-          <div className="w-full">
-            <InstallGuard>
-              <ButtonLogin />
-            </InstallGuard>
+          <div className="space-y-1">
+            <h1 className="text-2xl font-black text-slate-900 tracking-tight">StoreFlow</h1>
+            <p className="text-slate-500 text-sm font-medium">Gestão de Inventário e Produtos</p>
           </div>
         </div>
 
-        <div className="mt-12 grid grid-cols-3 gap-4 w-full px-2 animate-fluid-up [animation-delay:300ms]">
-          <div className="flex flex-col items-center gap-2">
-            <div className="w-14 h-14 rounded-[1.25rem] bg-white shadow-sm border border-slate-100 flex items-center justify-center">
-              <Scan className="w-6 h-6 text-orange-500" />
-            </div>
-            <span className="text-[9px] text-slate-500 font-bold uppercase tracking-wider">Scanner</span>
+        <div className="space-y-3 mb-10">
+          <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg border border-slate-100">
+            <Smartphone className="w-4 h-4 text-slate-400" />
+            <span className="text-xs font-bold text-slate-700 uppercase tracking-tight">Interface Otimizada Mobile</span>
           </div>
-          <div className="flex flex-col items-center gap-2">
-            <div className="w-14 h-14 rounded-[1.25rem] bg-white shadow-sm border border-slate-100 flex items-center justify-center">
-              <ShoppingBag className="w-6 h-6 text-blue-500" />
-            </div>
-            <span className="text-[9px] text-slate-500 font-bold uppercase tracking-wider">Produtos</span>
+          <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg border border-slate-100">
+            <ShieldCheck className="w-4 h-4 text-slate-400" />
+            <span className="text-xs font-bold text-slate-700 uppercase tracking-tight">Sincronização Segura</span>
           </div>
-          <div className="flex flex-col items-center gap-2">
-            <div className="w-14 h-14 rounded-[1.25rem] bg-white shadow-sm border border-slate-100 flex items-center justify-center">
-              <BarChart3 className="w-6 h-6 text-emerald-500" />
-            </div>
-            <span className="text-[9px] text-slate-500 font-bold uppercase tracking-wider">Estoque</span>
-          </div>
+        </div>
+
+        <div className="space-y-4">
+          <button
+            onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+            className="w-full h-14 bg-white border-2 border-slate-200 rounded-xl flex items-center justify-center gap-3 text-slate-700 font-bold hover:bg-slate-50 transition-all active:scale-[0.98]"
+          >
+            <img src="https://authjs.dev/img/providers/google.svg" className="w-5 h-5" alt="Google" />
+            Entrar com Google
+          </button>
+          <p className="text-[9px] text-center text-slate-400 font-bold uppercase tracking-[0.2em]">Acesso restrito a colaboradores</p>
         </div>
       </div>
 
-      <div className="relative z-10 mt-auto pt-10 pb-2 flex flex-col items-center gap-1.5 opacity-80 animate-fluid-fade [animation-delay:600ms]">
-        <span className="text-slate-400 text-[8px] font-bold tracking-[0.2em] uppercase">Desenvolvido por</span>
-        <span className="text-slate-700 text-[10px] font-black tracking-[0.15em] uppercase">TW Serviços Digitais</span>
+      <div className="mt-8 flex items-center gap-2 opacity-40">
+        <div className="h-px w-8 bg-slate-300"></div>
+        <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">TW Serviços Digitais</span>
+        <div className="h-px w-8 bg-slate-300"></div>
       </div>
     </div>
-  )
+  );
 }
