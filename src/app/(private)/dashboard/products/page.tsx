@@ -4,15 +4,14 @@ import {
     Plus,
     Edit3,
     Trash2,
-    Filter
+    Filter,
+    Image as ImageIcon
 } from "lucide-react";
 import Link from "next/link";
-
-const mockProducts = [
-    { id: 1, name: "Camiseta Oversized Black", price: "R$ 89,90", stock: 45, sku: "TS-001" },
-    { id: 2, name: "Calça Cargo Khaki", price: "R$ 159,90", stock: 12, sku: "PT-042" },
-    { id: 3, name: "Tênis Urban Sport", price: "R$ 299,90", stock: 0, sku: "SH-099" },
-];
+import { getAdminProducts } from "@/src/services/product";
+import { getServerSession } from "next-auth";
+import { auth } from "@/src/lib/auth-config";
+import { Suspense } from "react";
 
 export default function ProductsPage() {
     return (
@@ -41,35 +40,93 @@ export default function ProductsPage() {
                 </button>
             </div>
 
-            <div className="flex flex-col gap-3">
-                {mockProducts.map((product) => (
-                    <div key={product.id} className="bg-white border-2 border-slate-100 p-4 rounded-2xl flex items-center justify-between active:border-blue-200 transition-colors shadow-sm">
-                        <div className="flex items-center gap-4">
-                            <div className="w-16 h-16 bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-center font-black text-slate-300 text-sm">
-                                IMG
+            <Suspense fallback={<ProductsSkeleton />}>
+                <ProductsList />
+            </Suspense>
+        </div>
+    );
+}
+
+async function ProductsList() {
+    const session = await getServerSession(auth);
+    const backendUrl = session?.user?.callbackUrl || "";
+    const { data: products } = await getAdminProducts(1, 25);
+
+    return (
+        <div className="flex flex-col gap-3">
+            {products && products.length > 0 ? (
+                products.map((product) => {
+                    const stock = product.quantity || 0;
+                    const hasImage = product.images && product.images.length > 0;
+                    const imageUrl = hasImage ? (product.images[0].url.startsWith('http') ? product.images[0].url : `${backendUrl}${product.images[0].url}`) : null;
+
+                    return (
+                        <div key={product.id} className="bg-white border-2 border-slate-100 p-4 rounded-xl flex items-center justify-between active:border-blue-200 transition-colors shadow-sm">
+                            <div className="flex items-center gap-4">
+                                <div className="w-16 h-16 bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-center font-black text-slate-300 overflow-hidden">
+                                    {imageUrl ? (
+                                        <img src={imageUrl} alt={product.title} className="w-full h-full object-cover" />
+                                    ) : (
+                                        <ImageIcon className="w-6 h-6 text-slate-300" />
+                                    )}
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-[9px] font-black text-blue-500 uppercase tracking-widest">
+                                        {product.barcode || "SEM CÓDIGO"}
+                                    </span>
+                                    <h3 className="font-bold text-slate-900 text-sm leading-tight max-w-[140px] truncate">{product.title}</h3>
+                                    <span className="text-slate-900 font-black text-lg mt-1">
+                                        R$ {Number(product.price).toFixed(2).replace('.', ',')}
+                                    </span>
+                                </div>
                             </div>
-                            <div className="flex flex-col">
-                                <span className="text-[9px] font-black text-blue-500 uppercase tracking-widest">{product.sku}</span>
-                                <h3 className="font-bold text-slate-900 text-sm leading-tight">{product.name}</h3>
-                                <span className="text-slate-900 font-black text-lg mt-1">{product.price}</span>
+                            <div className="flex flex-col items-end gap-3">
+                                <div className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase ${stock > 0 ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-rose-50 text-rose-600 border border-rose-100'}`}>
+                                    {stock} NO ESTOQUE
+                                </div>
+                                <div className="flex gap-2">
+                                    <Link href={`/dashboard/products/${product.id}/edit`} className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 hover:text-blue-600 transition-colors">
+                                        <Edit3 className="w-4 h-4" />
+                                    </Link>
+                                    <button className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 hover:text-rose-600 transition-colors">
+                                        <Trash2 className="w-4 h-4" />
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                        <div className="flex flex-col items-end gap-3">
-                            <div className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase ${product.stock > 0 ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-rose-50 text-rose-600 border border-rose-100'}`}>
-                                {product.stock} NO ESTOQUE
-                            </div>
-                            <div className="flex gap-2">
-                                <button className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 hover:text-blue-600 transition-colors">
-                                    <Edit3 className="w-4 h-4" />
-                                </button>
-                                <button className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 hover:text-rose-600 transition-colors">
-                                    <Trash2 className="w-4 h-4" />
-                                </button>
-                            </div>
+                    );
+                })
+            ) : (
+                <div className="text-center py-12 text-slate-500 text-sm font-medium border-2 border-dashed border-slate-200 rounded-xl">
+                    Nenhum produto encontrado.
+                </div>
+            )}
+        </div>
+    );
+}
+
+function ProductsSkeleton() {
+    return (
+        <div className="flex flex-col gap-3">
+            {[1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="bg-white border-2 border-slate-100 p-4 rounded-xl flex items-center justify-between shadow-sm animate-pulse">
+                    <div className="flex items-center gap-4">
+                        <div className="w-16 h-16 bg-slate-100 rounded-xl"></div>
+                        <div className="flex flex-col gap-2">
+                            <div className="w-16 h-3 bg-slate-100 rounded-full"></div>
+                            <div className="w-32 h-4 bg-slate-100 rounded-full"></div>
+                            <div className="w-20 h-5 bg-slate-100 rounded-full mt-1"></div>
                         </div>
                     </div>
-                ))}
-            </div>
+                    <div className="flex flex-col items-end gap-3">
+                        <div className="w-20 h-5 bg-slate-100 rounded-lg"></div>
+                        <div className="flex gap-2">
+                            <div className="w-8 h-8 bg-slate-100 rounded-lg"></div>
+                            <div className="w-8 h-8 bg-slate-100 rounded-lg"></div>
+                        </div>
+                    </div>
+                </div>
+            ))}
         </div>
     );
 }
