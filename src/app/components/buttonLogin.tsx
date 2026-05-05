@@ -7,7 +7,7 @@ export default function ButtonLogin() {
     return (
         <button
             className="group relative w-full flex items-center justify-center gap-4 bg-white text-slate-800 font-bold py-5 px-8 rounded-2xl transition-all duration-300 hover:bg-slate-50 active:scale-[0.98] border border-slate-200 shadow-sm hover:shadow-md overflow-hidden"
-            onClick={() => signIn("google")}
+            onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
         >
             <div className="absolute inset-0 bg-linear-to-r from-transparent via-slate-100/50 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
 

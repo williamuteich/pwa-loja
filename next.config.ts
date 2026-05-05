@@ -1,6 +1,7 @@
 import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
+    cacheComponents: true,
     async headers() {
         return [
             {
@@ -12,6 +13,11 @@ const nextConfig: NextConfig = {
                 ],
             },
         ]
+    },
+    experimental: {
+        serverActions: {
+            bodySizeLimit: '10mb',
+        },
     },
 }
 
