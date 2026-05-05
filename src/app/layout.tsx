@@ -1,39 +1,35 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import type { Metadata } from "next"
+import { Geist, Geist_Mono } from "next/font/google"
+import "./globals.css"
+import { Providers } from "./components/providers"
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+    variable: "--font-geist-sans",
+    subsets: ["latin"],
+})
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+    variable: "--font-geist-mono",
+    subsets: ["latin"],
+})
 
 export const metadata: Metadata = {
-  title: "RentalPro - Gestão de Locadoras de Equipamentos",
-  description: "Sistema completo para gestão de estoque, locações e clientes da sua locadora.",
-};
-
-import { Providers } from "./components/providers";
+    title: "StoreFlow - Controle de E-commerce",
+    description: "Sincronização de estoque e produtos via scanner para seu e-commerce.",
+}
 
 export default function RootLayout({
-  children,
+    children,
 }: Readonly<{
-  children: React.ReactNode;
+    children: React.ReactNode
 }>) {
-  return (
-    <html
-      lang="pt-br"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">
-        <Providers>
-          <main className="flex-1">{children}</main>
-        </Providers>
-      </body>
-    </html>
-  );
+    return (
+        <html lang="pt-br" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
+            <body className="min-h-full flex flex-col">
+                <Providers>
+                    <main className="flex-1">{children}</main>
+                </Providers>
+            </body>
+        </html>
+    )
 }
