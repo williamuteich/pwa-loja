@@ -1,15 +1,16 @@
 import { getServerSession } from "next-auth";
 import { auth } from "@/src/lib/auth-config";
-import { 
-    Plus, 
-    Search, 
-    Barcode, 
+import {
+    Plus,
+    Search,
+    Barcode,
     LogOut,
     User,
     QrCode
 } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
+import { ButtonLogout } from "../../components/buttonGoogle";
 
 export default function DashboardPage() {
     return (
@@ -27,7 +28,7 @@ async function DashboardContent() {
         <div className="flex flex-col gap-8 pb-24 animate-in fade-in duration-500">
             <div className="bg-slate-900 -mx-4 px-6 py-12 border-b-4 border-blue-600 shadow-xl relative overflow-hidden">
                 <div className="absolute right-0 top-0 w-32 h-32 bg-blue-600/10 rounded-full blur-3xl"></div>
-                
+
                 <div className="flex items-center justify-between relative z-10">
                     <div className="flex flex-col gap-1">
                         <div className="flex items-center gap-3 mb-2">
@@ -39,16 +40,19 @@ async function DashboardContent() {
                         <h1 className="text-3xl font-black text-white tracking-tight leading-none">
                             Olá, <span className="text-blue-600 font-black">{firstName}</span>
                         </h1>
-                        
-                        <div className="flex items-center gap-4 mt-4">
+
+                        <div className="flex items-center gap-5 mt-6">
                             <div className="flex flex-col">
-                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Estoque Total</span>
+                                <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Estoque Total</span>
                                 <span className="text-2xl font-black text-white leading-none">2.428</span>
                             </div>
                             <div className="h-8 w-px bg-slate-800"></div>
                             <div className="flex flex-col">
-                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Status</span>
-                                <span className="text-xs font-bold text-emerald-400 uppercase tracking-tighter">Ativo</span>
+                                <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Sincronização</span>
+                                <div className="flex items-center gap-1.5">
+                                    <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
+                                    <span className="text-xs font-black text-white uppercase tracking-tighter">Agora</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -97,8 +101,8 @@ async function DashboardContent() {
                 </Link>
 
                 <Link href="/dashboard/products" className="bg-white border-2 border-slate-100 p-6 rounded-xl flex flex-col gap-4 active:border-slate-900 transition-all shadow-md">
-                    <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center">
-                        <Search className="text-slate-600 w-6 h-6" />
+                    <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center text-slate-600 border border-slate-200">
+                        <Search className="w-6 h-6" />
                     </div>
                     <div className="flex flex-col">
                         <span className="font-black text-slate-900 text-sm leading-tight">Catálogo</span>
@@ -108,10 +112,7 @@ async function DashboardContent() {
             </div>
 
             <div className="mt-6 px-2 flex justify-center">
-                <button className="flex items-center gap-2 text-slate-400 font-bold text-[10px] uppercase tracking-widest hover:text-rose-500 transition-colors">
-                    <LogOut className="w-3 h-3" />
-                    Encerrar Sessão
-                </button>
+                <ButtonLogout />
             </div>
         </div>
     );
@@ -119,9 +120,25 @@ async function DashboardContent() {
 
 function DashboardSkeleton() {
     return (
-        <div className="flex flex-col gap-6 pb-24 animate-pulse">
-            <div className="h-56 w-full bg-slate-900"></div>
-            <div className="px-2 grid grid-cols-2 gap-4 mt-4">
+        <div className="flex flex-col gap-8 pb-24 animate-pulse">
+            <div className="bg-slate-900 -mx-4 px-6 py-12 border-b-4 border-slate-800 shadow-xl relative overflow-hidden">
+                <div className="flex items-center justify-between">
+                    <div className="flex flex-col gap-4">
+                        <div className="flex items-center gap-3">
+                            <div className="w-12 h-12 rounded-xl bg-slate-800"></div>
+                            <div className="h-3 w-24 bg-slate-800 rounded-full"></div>
+                        </div>
+                        <div className="h-8 w-48 bg-slate-800 rounded-lg"></div>
+                        <div className="flex gap-4 mt-2">
+                            <div className="h-10 w-20 bg-slate-800 rounded-lg"></div>
+                            <div className="h-10 w-20 bg-slate-800 rounded-lg"></div>
+                        </div>
+                    </div>
+                    <div className="w-26 h-26 rounded-xl bg-slate-800"></div>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 px-2 -mt-4">
                 <div className="h-36 bg-slate-100 rounded-xl"></div>
                 <div className="h-36 bg-slate-100 rounded-xl"></div>
                 <div className="h-36 bg-slate-100 rounded-xl"></div>

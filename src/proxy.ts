@@ -1,11 +1,21 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { getToken } from "next-auth/jwt";
 
-export function proxy(request: NextRequest) {
-    const session = request.cookies.get("next-auth.session-token")
+export async function proxy(request: NextRequest) {
+    const token = await getToken({
+        req: request,
+        secret: process.env.NEXTAUTH_SECRET,
+    });
 
-    if (!session) {
+    const url = request.nextUrl.pathname;
+
+    if (!token) {
         return NextResponse.redirect(new URL("/", request.url));
+    }
+
+    if (token && url === "/") {
+        return NextResponse.redirect(new URL("/dashboard", request.url));
     }
 
     return NextResponse.next();
@@ -13,14 +23,6 @@ export function proxy(request: NextRequest) {
 
 export const config = {
     matcher: [
-        /*
-         * Match all request paths except for the ones starting with:
-         * - api (API routes)
-         * - _next/static (static files)
-         * - _next/image (image optimization files)
-         * - favicon.ico (favicon file)
-         * - Todos os arquivos com extensão (png, jpg, js, webmanifest, etc) <--- NOVO
-         */
-        '/((?!api|_next/static|_next/image|login|favicon.ico|.*\\..*|$).*)',
+        '/((?!api|_next/static|_next/image|favicon.ico|login|.*\\..*)(?:.+))',
     ],
 };

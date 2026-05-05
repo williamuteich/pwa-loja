@@ -1,9 +1,9 @@
 "use client"
 
-import { signIn } from "next-auth/react";
-import { LogIn } from "lucide-react";
+import { signIn, signOut } from "next-auth/react";
+import { LogIn, LogOut } from "lucide-react";
 
-export default function ButtonLogin() {
+export function ButtonLogin() {
     return (
         <button
             className="group relative w-full flex items-center justify-center gap-4 bg-white text-slate-800 font-bold py-5 px-8 rounded-2xl transition-all duration-300 hover:bg-slate-50 active:scale-[0.98] border border-slate-200 shadow-sm hover:shadow-md overflow-hidden"
@@ -31,6 +31,15 @@ export default function ButtonLogin() {
             </svg>
             <span className="uppercase tracking-tight text-sm">Entrar com Google</span>
             <LogIn className="w-4 h-4 ml-1 text-slate-400 group-hover:text-slate-800 transition-colors" />
+        </button>
+    );
+}
+
+export function ButtonLogout() {
+    return (
+        <button onClick={() => signOut({ callbackUrl: "/" })} className="flex items-center gap-2 text-slate-400 font-bold text-[10px] uppercase tracking-widest hover:text-rose-500 transition-colors">
+            <LogOut className="w-3 h-3" />
+            Encerrar Sessão
         </button>
     );
 }
