@@ -1,33 +1,62 @@
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-
 import { prisma } from "@/src/lib/prisma";
 
 export const auth: NextAuthOptions = {
     providers: [
         GoogleProvider({
-            clientId: process.env.GOOGLE_CLIENT_ID!,
+            clientId: process.env.GOOGLE_ID!,
             clientSecret: process.env.GOOGLE_SECRET!,
         })
     ],
     callbacks: {
-        async signIn({ user }) {
-            if (!user.email) return false;
+        async signIn({ user, account }) {
+            if (!user.email || !account?.id_token) return false;
 
-            const userExists = await prisma.user.findUnique({
+            const localUser = await prisma.user.findUnique({
                 where: { email: user.email }
             });
-            return !!userExists;
+
+            if (!localUser || !localUser.pwaEnabled) {
+                console.warn(`Usuário ${user.email} não encontrado ou sem acesso PWA.`);
+                return false;
+            }
+
+            try {
+                const response = await fetch(`${localUser.callbackUrl}/api/auth/pwa/validate`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ idToken: account.id_token })
+                });
+
+                const data = await response.json();
+
+                if (data.allowed) {
+                    user.id = localUser.id;
+                    user.callbackUrl = localUser.callbackUrl;
+                    user.role = data.role;
+                    return true;
+                }
+
+                return false;
+            } catch (error) {
+                console.error("Erro ao validar na API da loja:", error);
+                return false;
+            }
         },
         async jwt({ token, user }) {
             if (user) {
                 token.id = user.id;
+                token.callbackUrl = user.callbackUrl;
+                token.role = user.role;
             }
             return token;
         },
         async session({ session, token }) {
             if (session.user) {
                 session.user.id = token.id;
+                session.user.callbackUrl = token.callbackUrl;
+                session.user.role = token.role;
             }
             return session;
         }
