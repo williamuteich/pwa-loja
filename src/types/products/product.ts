@@ -1,6 +1,3 @@
-import { Category } from "./category";
-import { Brand } from "./brand";
-import { StoreConfig } from "./store-config";
 import { ReactNode } from "react";
 
 export interface Product {
@@ -14,9 +11,6 @@ export interface Product {
     createdAt: string;
     isActive: boolean;
     images: ProductImage[];
-    categories: Category[];
-    brand?: Brand;
-    brandId?: string;
     variants?: ProductVariant[];
     quantity?: number;
     barcode?: string | null;
@@ -52,25 +46,10 @@ export interface ProductsResponse {
 
 export interface ProductFormProps {
     product?: Product | null;
-    brands: Brand[];
-    categories: Category[];
 }
 
 export interface ProductCardProps {
     product: Product;
-    backendUrl: string;
-}
-
-export interface CategoryProductsCarouselProps {
-    title: string;
-    description?: string | null;
-    products: any[];
-    categoryPath?: string;
-    useAltBackground?: boolean;
-    backendUrl: string;
-}
-
-export interface OfferProductsCarouselProps {
     backendUrl: string;
 }
 
@@ -84,12 +63,6 @@ export interface RelatedProductsCarouselProps {
     backendUrl: string;
 }
 
-export interface ProductDetailProps {
-    product: Product;
-    storeConfig: StoreConfig | null;
-    backendUrl: string;
-}
-
 export interface ProductCarouselProps {
     products: Product[];
     backendUrl: string;
@@ -97,8 +70,6 @@ export interface ProductCarouselProps {
 
 export interface ProductsClientProps {
     initialProducts?: Product[];
-    categories?: Category[];
-    categoriesSlot?: ReactNode;
     productsSlot?: ReactNode;
     meta: {
         total: number;

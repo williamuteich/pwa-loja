@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 import { getServerSession } from "next-auth";
 import { auth } from "@/src/lib/auth-config";
-import { Product, ProductsResponse } from "@/src/types/product";
+import { Product, ProductsResponse } from "@/src/types/products/product";
 
 async function getApiUrl() {
     const session = await getServerSession(auth);

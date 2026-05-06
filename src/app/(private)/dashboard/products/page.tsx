@@ -13,19 +13,18 @@ import { getServerSession } from "next-auth";
 import { auth } from "@/src/lib/auth-config";
 import { Suspense } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ProductSearch } from "@/src/app/components/ProductSearch";
 
 
-export default async function ProductsPage({
+
+export default function ProductsPage({
     searchParams
 }: {
-    searchParams: Promise<{ page?: string }>
+    searchParams: Promise<{ page?: string; search?: string }>
 }) {
-    const session = await getServerSession(auth);
-    const params = await searchParams;
-    const currentPage = Number(params.page) || 1;
-
     return (
         <div className="flex flex-col gap-6 animate-in-view pb-32">
+
 
             <header className="flex items-center justify-between py-2 px-1">
                 <div className="flex items-center gap-4">
@@ -39,29 +38,35 @@ export default async function ProductsPage({
                 </Link>
             </header>
 
-            <div className="relative group">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5 group-focus-within:text-blue-500 transition-colors" />
-                <input
-                    type="text"
-                    placeholder="Pesquisar por nome ou SKU..."
-                    className="w-full bg-white border-2 border-slate-100 rounded-2xl py-5 pl-12 pr-4 text-sm font-medium focus:border-blue-500 outline-none transition-all shadow-sm"
-                />
-                <button className="absolute right-4 top-1/2 -translate-y-1/2 p-1 text-slate-300">
-                    <Filter className="w-4 h-4" />
-                </button>
-            </div>
+            <Suspense>
+                <ProductSearch />
+            </Suspense>
+
 
             <Suspense fallback={<ProductsSkeleton />}>
-                <ProductsList session={session} page={currentPage} />
+                <ProductsList searchParams={searchParams} />
             </Suspense>
+
         </div>
     );
 }
 
 
-async function ProductsList({ session, page }: { session: any; page: number }) {
+async function ProductsList({ 
+    searchParams 
+}: { 
+    searchParams: Promise<{ page?: string; search?: string }> 
+}) {
+    const session = await getServerSession(auth);
+    const params = await searchParams;
+    
+    const page = Number(params.page) || 1;
+    const search = params.search || "";
     const backendUrl = session?.user?.callbackUrl || "";
-    const { data: products, meta } = await getAdminProducts(page, 10);
+    
+    const { data: products, meta } = await getAdminProducts(page, 10, search);
+
+
 
 
     return (
@@ -124,7 +129,7 @@ async function ProductsList({ session, page }: { session: any; page: number }) {
             {meta.totalPages > 1 && (
                 <div className="flex items-center justify-between pt-6 border-t border-slate-100 mt-4">
                     <Link
-                        href={`/dashboard/products?page=${Math.max(1, page - 1)}`}
+                        href={`/dashboard/products?page=${Math.max(1, page - 1)}${search ? `&search=${search}` : ''}`}
                         className={`flex items-center gap-2 px-4 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all active:scale-95 ${page > 1 ? 'bg-white border-2 border-slate-100 text-slate-600' : 'bg-slate-50 text-slate-300 pointer-events-none'}`}
                     >
                         <ChevronLeft className="w-4 h-4" />
@@ -137,7 +142,7 @@ async function ProductsList({ session, page }: { session: any; page: number }) {
                     </div>
 
                     <Link
-                        href={`/dashboard/products?page=${Math.min(meta.totalPages, page + 1)}`}
+                        href={`/dashboard/products?page=${Math.min(meta.totalPages, page + 1)}${search ? `&search=${search}` : ''}`}
                         className={`flex items-center gap-2 px-4 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all active:scale-95 ${page < meta.totalPages ? 'bg-white border-2 border-slate-100 text-slate-600' : 'bg-slate-50 text-slate-300 pointer-events-none'}`}
                     >
                         Próxima
@@ -145,6 +150,7 @@ async function ProductsList({ session, page }: { session: any; page: number }) {
                     </Link>
                 </div>
             )}
+
         </div>
     );
 }
