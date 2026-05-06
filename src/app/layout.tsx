@@ -5,6 +5,11 @@ import { Providers } from "./components/providers"
 export const metadata: Metadata = {
     title: "StoreFlow - Controle de E-commerce",
     description: "Sincronização de estoque e produtos via scanner para seu e-commerce.",
+    manifest: "/manifest.webmanifest",
+    icons: {
+        icon: "/logo-icon.png",
+        apple: "/logo-icon.png",
+    }
 }
 
 export default function RootLayout({

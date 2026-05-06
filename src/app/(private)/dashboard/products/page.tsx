@@ -1,10 +1,8 @@
 import {
-    Search,
     ArrowLeft,
     Plus,
     Edit3,
     Trash2,
-    Filter,
     Image as ImageIcon
 } from "lucide-react";
 import Link from "next/link";
@@ -14,8 +12,6 @@ import { auth } from "@/src/lib/auth-config";
 import { Suspense } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ProductSearch } from "@/src/app/components/ProductSearch";
-
-
 
 export default function ProductsPage({
     searchParams
@@ -51,23 +47,19 @@ export default function ProductsPage({
     );
 }
 
-
-async function ProductsList({ 
-    searchParams 
-}: { 
-    searchParams: Promise<{ page?: string; search?: string }> 
+async function ProductsList({
+    searchParams
+}: {
+    searchParams: Promise<{ page?: string; search?: string }>
 }) {
     const session = await getServerSession(auth);
     const params = await searchParams;
-    
+
     const page = Number(params.page) || 1;
     const search = params.search || "";
     const backendUrl = session?.user?.callbackUrl || "";
-    
+
     const { data: products, meta } = await getAdminProducts(page, 10, search);
-
-
-
 
     return (
         <div className="flex flex-col gap-3">
@@ -75,7 +67,12 @@ async function ProductsList({
                 products.map((product) => {
                     const stock = product.quantity || 0;
                     const hasImage = product.images && product.images.length > 0;
-                    const imageUrl = hasImage ? (product.images[0].url.startsWith('http') ? product.images[0].url : `${backendUrl}${product.images[0].url}`) : null;
+                    const rawUrl = product.images?.[0]?.url || "";
+                    const imageUrl = hasImage
+                        ? (rawUrl.startsWith('http')
+                            ? rawUrl
+                            : `${backendUrl.endsWith('/') ? backendUrl : backendUrl + '/'}${rawUrl.startsWith('/') ? rawUrl.slice(1) : rawUrl}`)
+                        : null;
 
                     return (
                         <div key={product.id} className="bg-white border-2 border-slate-100 p-4 rounded-xl flex items-center justify-between active:border-blue-200 transition-colors shadow-sm">
@@ -154,7 +151,6 @@ async function ProductsList({
         </div>
     );
 }
-
 
 function ProductsSkeleton() {
     return (

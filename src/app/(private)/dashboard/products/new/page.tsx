@@ -12,8 +12,8 @@ import { ProductVisibility } from "@/src/app/components/ProductForm/ProductVisib
 import { useState, useEffect } from "react";
 import { Product } from "@/src/types/products/product";
 import { createProduct } from "@/src/services/product";
-import { getAdminCategories } from "@/src/services/category";
-import { getAdminBrands } from "@/src/services/brand";
+import { getAdminCategories } from "@/src/services/category"; // Corrigido
+import { getAdminBrands } from "@/src/services/brand"; // Corrigido
 import { useRouter } from "next/navigation";
 import { Category } from "@/src/types/products/category";
 import { Brand } from "@/src/types/products/brand";
@@ -84,6 +84,11 @@ export default function NewProductPage() {
             formData.append("title", product.title);
             formData.append("description", product.description || "");
             formData.append("price", (product.price || 0).toString());
+
+            if (product.discountPrice !== null) {
+                formData.append("discountPrice", product.discountPrice.toString());
+            }
+
             formData.append("quantity", finalQuantity.toString());
             formData.append("isActive", String(product.isActive));
             formData.append("barcode", product.barcode || "");
@@ -92,6 +97,7 @@ export default function NewProductPage() {
             if (product.brandId) {
                 formData.append("brandId", product.brandId);
             }
+
             formData.append("categoryIds", JSON.stringify(product.categoryIds || []));
 
             const specsString = Object.entries(product.specs || {})
