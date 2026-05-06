@@ -1,15 +1,18 @@
-"use client";
-
+import React from "react";
 import { Palette, Plus, Trash2, Box } from "lucide-react";
 import { Product } from "@/src/types/products/product";
 
-export function ProductVariants({
-    product,
-    setProduct,
-}: {
+interface ProductVariantsProps {
     product: Product;
     setProduct: React.Dispatch<React.SetStateAction<Product>>;
-}) {
+}
+
+export const ProductVariants: React.FC<ProductVariantsProps> = ({
+    product,
+    setProduct,
+}) => {
+    const variants = product.variants || [];
+
     const addVariant = () => {
         setProduct(prev => ({
             ...prev,
@@ -21,21 +24,25 @@ export function ProductVariants({
     };
 
     const updateVariant = (index: number, field: string, value: any) => {
-        const variants = product.variants || [];
-        const newVariants = [...variants];
-        newVariants[index] = { ...newVariants[index], [field]: value };
+        const currentVariants = product.variants || [];
+        const newVariants = [...currentVariants];
+        
+        let finalValue = value;
+        if (field === "stock") {
+            finalValue = Math.max(0, parseInt(value) || 0);
+        }
+
+        newVariants[index] = { ...newVariants[index], [field]: finalValue };
         setProduct(prev => ({ ...prev, variants: newVariants }));
     };
 
     const removeVariant = (index: number) => {
-        const variants = product.variants || [];
+        const currentVariants = product.variants || [];
         setProduct(prev => ({
             ...prev,
-            variants: variants.filter((_, i) => i !== index)
+            variants: currentVariants.filter((_, i) => i !== index)
         }));
     };
-
-    const variants = product.variants || [];
 
     return (
         <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm">
@@ -51,7 +58,7 @@ export function ProductVariants({
                             <p className="text-[10px] font-bold text-slate-400">Gerenciamento de opções</p>
                         </div>
                     </div>
-                    <button 
+                    <button
                         type="button"
                         onClick={addVariant}
                         className="flex items-center gap-1.5 px-4 py-2.5 bg-rose-500 text-white rounded-xl text-xs font-black uppercase tracking-wider active:scale-95 transition-transform shadow-md shadow-rose-100"
@@ -66,7 +73,7 @@ export function ProductVariants({
                         <div key={v.id || i} className="bg-slate-50 border border-slate-100 rounded-2xl p-4 space-y-3">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
-                                    <input 
+                                    <input
                                         type="color"
                                         value={v.color || "#000000"}
                                         onChange={(e) => updateVariant(i, "color", e.target.value)}
@@ -76,7 +83,7 @@ export function ProductVariants({
                                         <p className="text-[10px] font-black text-slate-400 font-mono uppercase">{v.color || "#000000"}</p>
                                     </div>
                                 </div>
-                                <button 
+                                <button
                                     type="button"
                                     onClick={() => removeVariant(i)}
                                     className="w-10 h-10 bg-white border border-slate-200 text-rose-400 rounded-xl flex items-center justify-center active:scale-90 transition-transform"
@@ -97,8 +104,9 @@ export function ProductVariants({
                                 <Box className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
                                 <input
                                     type="number"
+                                    min="0"
                                     value={v.stock || ""}
-                                    onChange={(e) => updateVariant(i, "stock", parseInt(e.target.value) || 0)}
+                                    onChange={(e) => updateVariant(i, "stock", e.target.value)}
                                     placeholder="Quantidade em estoque"
                                     className="w-full bg-white border border-slate-200 focus:border-rose-400 rounded-xl py-3 pl-11 pr-4 text-sm font-black text-slate-900 outline-none transition-all"
                                 />
@@ -116,4 +124,4 @@ export function ProductVariants({
             </div>
         </div>
     );
-}
+};

@@ -69,8 +69,8 @@ export function ProductClassification({
                                             setProduct(prev => ({ ...prev, categoryIds: nextIds } as any));
                                         }}
                                         className={`flex items-center justify-between px-5 py-4 rounded-2xl border transition-all cursor-pointer ${isSelected
-                                                ? "bg-violet-50 border-violet-200"
-                                                : "bg-slate-50 border-slate-100"
+                                            ? "bg-violet-50 border-violet-200"
+                                            : "bg-slate-50 border-slate-100"
                                             }`}
                                     >
                                         <span className={`text-sm ${isSelected ? "font-black text-violet-800" : "font-bold text-slate-500"}`}>

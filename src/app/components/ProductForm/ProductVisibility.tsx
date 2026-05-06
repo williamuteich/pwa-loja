@@ -1,17 +1,18 @@
-"use client";
-
+import React from "react";
 import { Eye, Globe, Settings } from "lucide-react";
 import { Product } from "@/src/types/products/product";
 
-export function ProductVisibility({
-    product,
-    setProduct,
-}: {
+interface ProductVisibilityProps {
     product: Product;
     setProduct: React.Dispatch<React.SetStateAction<Product>>;
-}) {
-    const specsString = typeof product.specs === 'string' 
-        ? product.specs 
+}
+
+export const ProductVisibility: React.FC<ProductVisibilityProps> = ({
+    product,
+    setProduct,
+}) => {
+    const specsString = typeof product.specs === 'string'
+        ? product.specs
         : Object.entries(product.specs || {})
             .filter(([key]) => key !== 'brand')
             .map(([key, val]) => `${key}: ${val}`)
@@ -35,7 +36,7 @@ export function ProductVisibility({
                     </div>
                 </div>
 
-                <div 
+                <div
                     onClick={() => setProduct(prev => ({ ...prev, isActive: !prev.isActive }))}
                     className="flex items-center justify-between p-5 bg-slate-900 rounded-2xl cursor-pointer active:scale-[0.98] transition-all"
                 >
@@ -71,4 +72,4 @@ export function ProductVisibility({
             </div>
         </div>
     );
-}
+};

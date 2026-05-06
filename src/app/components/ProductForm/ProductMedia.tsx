@@ -1,16 +1,19 @@
-"use client";
-
+import React from "react";
 import { Product, ProductImage } from "@/src/types/products/product";
 import { ImageIcon, Camera, Plus, X, UploadCloud } from "lucide-react";
 import { useRef } from "react";
 
-export function ProductMedia({
-    product,
-    setProduct,
-}: {
+interface ProductMediaProps {
     product: Product;
     setProduct: React.Dispatch<React.SetStateAction<Product>>;
-}) {
+    setImageFiles: React.Dispatch<React.SetStateAction<File[]>>;
+}
+
+export const ProductMedia: React.FC<ProductMediaProps> = ({
+    product,
+    setProduct,
+    setImageFiles,
+}) => {
     const galleryInputRef = useRef<HTMLInputElement>(null);
     const cameraInputRef = useRef<HTMLInputElement>(null);
 
@@ -19,7 +22,13 @@ export function ProductMedia({
     const handleFiles = (files: FileList | null) => {
         if (!files || files.length === 0) return;
 
-        const newImages: ProductImage[] = Array.from(files).map((file) => ({
+        const newFiles = Array.from(files);
+
+        if (typeof setImageFiles === 'function') {
+            setImageFiles((prev) => [...prev, ...newFiles].slice(0, 6));
+        }
+
+        const newImages: ProductImage[] = newFiles.map((file) => ({
             id: `img-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
             url: URL.createObjectURL(file),
             productId: "",
@@ -38,6 +47,11 @@ export function ProductMedia({
         const imgToRemove = images[index];
         if (imgToRemove?.url.startsWith("blob:")) {
             URL.revokeObjectURL(imgToRemove.url);
+        }
+
+        // Remove também da lista de arquivos reais
+        if (typeof setImageFiles === 'function') {
+            setImageFiles((prev) => prev.filter((_, i) => i !== index));
         }
 
         setProduct((prev) => ({
@@ -94,7 +108,6 @@ export function ProductMedia({
                                 src={img.url}
                                 alt={`Preview ${i}`}
                                 className="w-full h-full object-cover"
-                                key={img.url}
                             />
                             {i === 0 && (
                                 <div className="absolute bottom-0 left-0 right-0 bg-blue-500 text-white text-[9px] font-black uppercase text-center py-1 tracking-widest z-10">
@@ -147,4 +160,4 @@ export function ProductMedia({
             </div>
         </div>
     );
-}
+};

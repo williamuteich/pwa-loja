@@ -1,15 +1,34 @@
-"use client";
-
-import { DollarSign, Tag, TrendingUp } from "lucide-react";
+import React from "react";
+import { DollarSign, Tag } from "lucide-react";
 import { Product } from "@/src/types/products/product";
 
-export function ProductPricing({
-    product,
-    setProduct,
-}: {
+interface ProductPricingProps {
     product: Product;
     setProduct: React.Dispatch<React.SetStateAction<Product>>;
-}) {
+}
+
+export const ProductPricing: React.FC<ProductPricingProps> = ({
+    product,
+    setProduct,
+}) => {
+    const formatBRL = (value: number | null) => {
+        if (value === null) return "";
+        return new Intl.NumberFormat("pt-BR", {
+            style: "currency",
+            currency: "BRL",
+        }).format(value);
+    };
+
+    const handleCurrencyChange = (e: React.ChangeEvent<HTMLInputElement>, field: "price" | "discountPrice") => {
+        let value = e.target.value.replace(/\D/g, "");
+        const numericValue = value ? parseInt(value) / 100 : 0;
+
+        setProduct(prev => ({
+            ...prev,
+            [field]: field === "discountPrice" && numericValue === 0 ? null : numericValue
+        }));
+    };
+
     return (
         <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm">
             <div className="h-1 w-full bg-linear-to-r from-emerald-400 to-teal-500" />
@@ -28,13 +47,13 @@ export function ProductPricing({
                     <div className="space-y-2">
                         <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Preço de Venda</label>
                         <div className="relative">
-                            <span className="absolute left-5 top-1/2 -translate-y-1/2 font-black text-emerald-500 text-base">R$</span>
                             <input
-                                type="number"
-                                value={product.price || ""}
-                                onChange={(e) => setProduct(prev => ({ ...prev, price: parseFloat(e.target.value) || 0 }))}
-                                placeholder="0,00"
-                                className="w-full bg-emerald-50 border border-emerald-100 focus:border-emerald-400 focus:bg-white rounded-2xl py-5 pl-14 pr-5 text-xl font-black text-slate-900 outline-none transition-all"
+                                type="text"
+                                inputMode="numeric"
+                                value={formatBRL(product.price)}
+                                onChange={(e) => handleCurrencyChange(e, "price")}
+                                placeholder="R$ 0,00"
+                                className="w-full bg-emerald-50 border border-emerald-100 focus:border-emerald-400 focus:bg-white rounded-2xl py-5 px-6 text-xl font-black text-slate-900 outline-none transition-all"
                             />
                         </div>
                     </div>
@@ -45,13 +64,13 @@ export function ProductPricing({
                             <span className="text-[9px] font-black bg-rose-50 text-rose-500 px-2.5 py-1 rounded-lg">Opcional</span>
                         </div>
                         <div className="relative">
-                            <Tag className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-rose-400" />
                             <input
-                                type="number"
-                                value={product.discountPrice || ""}
-                                onChange={(e) => setProduct(prev => ({ ...prev, discountPrice: parseFloat(e.target.value) || null }))}
-                                placeholder="0,00"
-                                className="w-full bg-rose-50 border border-rose-100 focus:border-rose-400 focus:bg-white rounded-2xl py-5 pl-14 pr-5 text-xl font-black text-slate-900 outline-none transition-all"
+                                type="text"
+                                inputMode="numeric"
+                                value={formatBRL(product.discountPrice)}
+                                onChange={(e) => handleCurrencyChange(e, "discountPrice")}
+                                placeholder="R$ 0,00"
+                                className="w-full bg-rose-50 border border-rose-100 focus:border-rose-400 focus:bg-white rounded-2xl py-5 px-6 text-xl font-black text-slate-900 outline-none transition-all"
                             />
                         </div>
                     </div>
@@ -59,4 +78,4 @@ export function ProductPricing({
             </div>
         </div>
     );
-}
+};

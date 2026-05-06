@@ -11,9 +11,14 @@ import { ProductVariants } from "@/src/app/components/ProductForm/ProductVariant
 import { ProductVisibility } from "@/src/app/components/ProductForm/ProductVisibility";
 import { useState, useEffect } from "react";
 import { Product } from "@/src/types/products/product";
+import { createProduct } from "@/src/services/product";
+import { useRouter } from "next/navigation";
 
 export default function NewProductPage() {
+    const router = useRouter();
     const [isMounted, setIsMounted] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [imageFiles, setImageFiles] = useState<File[]>([]);
     const [product, setProduct] = useState<Product>({
         id: "",
         title: "",
@@ -42,13 +47,47 @@ export default function NewProductPage() {
         return <div className="min-h-screen bg-slate-50" />;
     }
 
-    const handleSubmit = async (e?: React.FormEvent) => {
-        if (e) e.preventDefault();
-
+    const handleSubmit = async () => {
+        setLoading(true);
         try {
-            console.log("Iniciando submissão do produto:", product);
+            const formData = new FormData();
+
+            const hasVariants = (product.variants || []).length > 0;
+            const finalQuantity = hasVariants
+                ? (product.variants || []).reduce((acc, curr: any) => acc + (curr.stock || 0), 0)
+                : (product.quantity || 0);
+
+            formData.append("title", product.title);
+            formData.append("description", product.description || "");
+            formData.append("price", (product.price || 0).toString());
+            formData.append("quantity", finalQuantity.toString());
+            formData.append("isActive", String(product.isActive));
+            formData.append("sku", product.sku || "");
+            formData.append("specs", JSON.stringify(product.specs || {}));
+            formData.append("variants", JSON.stringify(product.variants || []));
+
+            imageFiles.forEach((file) => {
+                formData.append("images", file);
+            });
+
+            console.log("--- ENVIANDO PARA O BACKEND ---");
+            for (const pair of formData.entries()) {
+                console.log(pair[0] + ': ' + pair[1]);
+            }
+
+            const result = await createProduct(formData);
+
+            if (result.error) {
+                alert(result.error);
+            } else {
+                alert("Produto criado com sucesso!");
+                router.push("/dashboard/products");
+            }
         } catch (error) {
-            console.error("Erro na submissão:", error);
+            console.error(error);
+            alert("Erro ao salvar produto");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -56,30 +95,26 @@ export default function NewProductPage() {
         <div className="flex flex-col min-h-screen bg-slate-50 pb-40">
             <header className="bg-white border-b border-slate-100 px-4 py-4 flex items-center justify-between sticky top-0 z-30">
                 <div className="flex items-center gap-3">
-                    <Link
-                        href="/dashboard/products"
-                        className="w-10 h-10 bg-slate-50 border border-slate-200 rounded-2xl flex items-center justify-center text-slate-500 active:scale-95 transition-transform"
-                    >
+                    <Link href="/dashboard/products" className="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-50 text-slate-400 active:scale-95 transition-all">
                         <ArrowLeft className="w-5 h-5" />
                     </Link>
                     <div>
-                        <div className="flex items-center gap-1.5">
-                            <span className="text-[9px] font-black text-blue-500 uppercase tracking-[0.2em]">Novo Produto</span>
-                        </div>
+                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Catálogo</p>
                         <h1 className="text-base font-black text-slate-900 tracking-tight leading-none">Criar Produto</h1>
                     </div>
                 </div>
                 <button
-                    onClick={() => handleSubmit()}
-                    className="px-4 py-2 bg-slate-900 text-white rounded-xl text-xs font-black uppercase tracking-widest active:scale-95 transition-all flex items-center gap-2"
+                    onClick={handleSubmit}
+                    disabled={loading}
+                    className="px-4 py-2 bg-slate-900 text-white rounded-xl text-xs font-black uppercase tracking-widest active:scale-95 transition-all flex items-center gap-2 disabled:opacity-50"
                 >
                     <Save className="w-3.5 h-3.5" />
-                    Salvar
+                    {loading ? "Salvando..." : "Salvar"}
                 </button>
             </header>
 
             <div className="flex flex-col gap-4 p-4">
-                <ProductMedia product={product} setProduct={setProduct} />
+                <ProductMedia product={product} setProduct={setProduct} setImageFiles={setImageFiles} />
                 <ProductInfo product={product} setProduct={setProduct} />
                 <ProductPricing product={product} setProduct={setProduct} />
                 <ProductInventory product={product} setProduct={setProduct} />

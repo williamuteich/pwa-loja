@@ -1,15 +1,16 @@
-"use client";
-
+import React from "react";
 import { AlignLeft, Type } from "lucide-react";
 import { Product } from "@/src/types/products/product";
 
-export function ProductInfo({
-    product,
-    setProduct,
-}: {
+interface ProductInfoProps {
     product: Product;
     setProduct: React.Dispatch<React.SetStateAction<Product>>;
-}) {
+}
+
+export const ProductInfo: React.FC<ProductInfoProps> = ({
+    product,
+    setProduct,
+}) => {
     return (
         <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm">
             <div className="h-1 w-full bg-linear-to-r from-indigo-500 to-violet-500" />
