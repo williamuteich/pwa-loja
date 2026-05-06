@@ -93,6 +93,7 @@ export interface ProductFormSectionProps {
 
 export interface ProductMediaProps extends ProductFormSectionProps {
     setImageFiles: React.Dispatch<React.SetStateAction<File[]>>;
+    backendUrl?: string;
 }
 
 export interface ProductClassificationProps extends ProductFormSectionProps {

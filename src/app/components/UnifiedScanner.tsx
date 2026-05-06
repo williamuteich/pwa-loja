@@ -4,6 +4,7 @@ import { X, ArrowLeft, QrCode, Zap, ZapOff, RefreshCcw, Barcode } from "lucide-r
 import { useState, useEffect, useRef } from "react"
 import { Html5Qrcode } from "html5-qrcode"
 import { ManualInputModal } from "./ManualInputModal"
+import { UnifiedScannerProps } from "@/src/types/ui/modals"
 
 export function UnifiedScanner({ onScan, onClose, title = "Escanear Produto", isPage = false }: UnifiedScannerProps) {
     const [isScannerReady, setIsScannerReady] = useState(false)

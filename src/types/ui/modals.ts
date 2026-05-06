@@ -23,3 +23,10 @@ export interface ScannerModalProps {
     onClose: () => void;
     onScan: (text: string) => void;
 }
+
+export interface UnifiedScannerProps {
+    onScan: (text: string) => void;
+    onClose: () => void;
+    title?: string;
+    isPage?: boolean;
+}

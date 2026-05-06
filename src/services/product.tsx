@@ -13,6 +13,14 @@ async function getApiUrl() {
     return session.user.callbackUrl;
 }
 
+export async function getBackendUrl() {
+    try {
+        return await getApiUrl();
+    } catch {
+        return "";
+    }
+}
+
 export async function getAdminProducts(page: number = 1, limit: number = 10, search: string = "", hasDiscount?: boolean, isActive?: boolean): Promise<ProductsResponse> {
     try {
         const API_URL = await getApiUrl();

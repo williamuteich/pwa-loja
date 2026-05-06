@@ -7,6 +7,7 @@ export const ProductMedia: React.FC<ProductMediaProps> = ({
     product,
     setProduct,
     setImageFiles,
+    backendUrl = "",
 }) => {
     const galleryInputRef = useRef<HTMLInputElement>(null);
     const cameraInputRef = useRef<HTMLInputElement>(null);
@@ -85,33 +86,40 @@ export const ProductMedia: React.FC<ProductMediaProps> = ({
                 />
 
                 <div className="grid grid-cols-3 gap-3">
-                    {images.map((img, i) => (
-                        <div
-                            key={img.id}
-                            className="relative aspect-square rounded-2xl overflow-hidden border-2 border-slate-100 bg-slate-50"
-                        >
-                            <img
-                                src={img.url}
-                                alt={`Preview ${i}`}
-                                className="w-full h-full object-cover"
-                            />
-                            {i === 0 && (
-                                <div className="absolute bottom-0 left-0 right-0 bg-blue-500 text-white text-[9px] font-black uppercase text-center py-1 tracking-widest z-10">
-                                    Principal
-                                </div>
-                            )}
-                            <button
-                                type="button"
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    removeImage(i);
-                                }}
-                                className="absolute top-1.5 right-1.5 w-7 h-7 bg-white/90 rounded-full flex items-center justify-center text-rose-500 shadow-sm active:scale-90 transition-transform z-20"
+                    {images.map((img, i) => {
+                        const rawUrl = img.url || "";
+                        const imageUrl = rawUrl.startsWith('blob:') || rawUrl.startsWith('http') || !backendUrl
+                            ? rawUrl
+                            : `${backendUrl.endsWith('/') ? backendUrl : backendUrl + '/'}${rawUrl.startsWith('/') ? rawUrl.slice(1) : rawUrl}`;
+
+                        return (
+                            <div
+                                key={img.id}
+                                className="relative aspect-square rounded-2xl overflow-hidden border-2 border-slate-100 bg-slate-50"
                             >
-                                <X className="w-3.5 h-3.5" />
-                            </button>
-                        </div>
-                    ))}
+                                <img
+                                    src={imageUrl}
+                                    alt={`Preview ${i}`}
+                                    className="w-full h-full object-cover"
+                                />
+                                {i === 0 && (
+                                    <div className="absolute bottom-0 left-0 right-0 bg-blue-500 text-white text-[9px] font-black uppercase text-center py-1 tracking-widest z-10">
+                                        Principal
+                                    </div>
+                                )}
+                                <button
+                                    type="button"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        removeImage(i);
+                                    }}
+                                    className="absolute top-1.5 right-1.5 w-7 h-7 bg-white/90 rounded-full flex items-center justify-center text-rose-500 shadow-sm active:scale-90 transition-transform z-20"
+                                >
+                                    <X className="w-3.5 h-3.5" />
+                                </button>
+                            </div>
+                        );
+                    })}
 
                     {images.length < 6 && (
                         <button
