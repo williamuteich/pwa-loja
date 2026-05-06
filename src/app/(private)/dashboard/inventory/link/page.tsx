@@ -1,21 +1,30 @@
 "use client"
 
-import { ArrowLeft, Barcode, Check, Search, QrCode, AlertCircle, Loader2 } from "lucide-react"
+import { ArrowLeft, Barcode, Check, QrCode, AlertCircle, ChevronLeft, ChevronRight } from "lucide-react"
 import Link from "next/link"
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { useSession } from "next-auth/react"
+import { useSearchParams } from "next/navigation"
 
 import { Product } from "@/src/types/products/product"
 import { ScannerModal } from "@/src/app/components/ScannerModal"
 import { ManualInputModal } from "@/src/app/components/ManualInputModal"
+import { ProductSearch } from "@/src/app/components/ProductSearch"
 import { getProductsMissingInfo, updateStockProduct } from "@/src/services/stock"
 
 export default function InventoryLinkPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen bg-slate-50 animate-pulse" />}>
+            <InventoryLinkContent />
+        </Suspense>
+    )
+}
+
+function InventoryLinkContent() {
     const { data: session } = useSession()
+    const searchParams = useSearchParams()
     const [pendingProducts, setPendingProducts] = useState<Product[]>([])
     const [loading, setLoading] = useState(true)
-    const [loadingMore, setLoadingMore] = useState(false)
-    const [searchTerm, setSearchTerm] = useState("")
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
     const [isScannerOpen, setIsScannerOpen] = useState(false)
     const [scannedCode, setScannedCode] = useState<string | null>(null)
@@ -27,6 +36,9 @@ export default function InventoryLinkPage() {
         total: 0
     })
 
+    const search = searchParams.get("search") || ""
+    const page = Number(searchParams.get("page")) || 1
+
     const getImageUrl = (url?: string) => {
         if (!url) return null
         if (url.startsWith('http')) return url
@@ -35,32 +47,22 @@ export default function InventoryLinkPage() {
     }
 
     useEffect(() => {
-        fetchProducts(1, true)
-    }, [])
+        fetchProducts(page, search)
+    }, [page, search])
 
-    const fetchProducts = async (page: number, replace: boolean = false) => {
-        if (replace) setLoading(true)
-        else setLoadingMore(true)
-
-        const res = await getProductsMissingInfo(page, 20)
+    const fetchProducts = async (p: number, s: string) => {
+        setLoading(true)
+        const res = await getProductsMissingInfo(p, 10, s)
         
         if (res.data) {
-            setPendingProducts(prev => replace ? res.data : [...prev, ...res.data])
+            setPendingProducts(res.data)
             setPagination({
                 page: res.meta.page,
                 totalPages: res.meta.totalPages,
                 total: res.meta.total
             })
         }
-        
         setLoading(false)
-        setLoadingMore(false)
-    }
-
-    const handleLoadMore = () => {
-        if (pagination.page < pagination.totalPages) {
-            fetchProducts(pagination.page + 1)
-        }
     }
 
     const handleScan = (code: string) => {
@@ -104,12 +106,8 @@ export default function InventoryLinkPage() {
         setUpdating(false)
     }
 
-    const filteredProducts = pendingProducts.filter(p =>
-        p.title.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-
     return (
-        <div className="flex flex-col min-h-screen bg-slate-50 pb-10">
+        <div className="flex flex-col min-h-screen bg-slate-50">
             <header className="bg-white border-b border-slate-200 sticky top-0 z-100 px-4 py-6">
                 <div className="max-w-2xl mx-auto flex items-center gap-4">
                     <Link href="/dashboard" className="w-10 h-10 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-400 active:scale-95 transition-all">
@@ -121,29 +119,20 @@ export default function InventoryLinkPage() {
                     </div>
                 </div>
 
-                <div className="max-w-2xl mx-auto mt-6 relative">
-                    <div className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400">
-                        <Search className="w-5 h-5" />
-                    </div>
-                    <input
-                        type="text"
-                        placeholder="Buscar produto por nome..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full h-14 bg-slate-50 border-2 border-slate-100 rounded-2xl pl-14 pr-6 text-slate-900 font-bold focus:border-slate-900 outline-none transition-all placeholder:text-slate-300"
-                    />
+                <div className="max-w-2xl mx-auto mt-6">
+                    <ProductSearch />
                 </div>
             </header>
 
-            <div className="max-w-2xl mx-auto w-full px-4 mt-6">
+            <div className="max-w-2xl mx-auto w-full px-4 mt-6 flex flex-col gap-6">
                 <div className="flex flex-col gap-3">
                     {loading ? (
                         [1, 2, 3, 4].map(i => (
                             <div key={i} className="h-24 bg-white border-2 border-slate-100 rounded-2xl animate-pulse" />
                         ))
-                    ) : filteredProducts.length > 0 ? (
+                    ) : pendingProducts.length > 0 ? (
                         <>
-                            {filteredProducts.map((product) => (
+                            {pendingProducts.map((product) => (
                                 <div key={product.id} className="bg-white border-2 border-slate-100 p-4 rounded-2xl flex items-center justify-between shadow-sm group transition-all">
                                     <div className="flex items-center gap-4 min-w-0">
                                         <div className="w-16 h-16 rounded-xl bg-slate-50 border border-slate-100 overflow-hidden shrink-0">
@@ -183,20 +172,35 @@ export default function InventoryLinkPage() {
                                 </div>
                             ))}
 
-                            {pagination.page < pagination.totalPages && (
-                                <button
-                                    onClick={handleLoadMore}
-                                    disabled={loadingMore}
-                                    className="w-full py-4 bg-white border-2 border-slate-100 rounded-2xl text-slate-400 font-black uppercase tracking-widest text-[10px] hover:bg-slate-50 transition-all flex items-center justify-center gap-2"
-                                >
-                                    {loadingMore ? <Loader2 className="w-4 h-4 animate-spin" /> : "Carregar Mais"}
-                                </button>
+                            {pagination.totalPages > 1 && (
+                                <div className="flex items-center justify-between pt-8 border-t border-slate-200 mt-6">
+                                    <Link
+                                        href={`/dashboard/inventory/link?page=${Math.max(1, page - 1)}${search ? `&search=${search}` : ''}`}
+                                        className={`flex items-center gap-2 px-6 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all active:scale-95 ${page > 1 ? 'bg-white border-2 border-slate-100 text-slate-600 shadow-sm' : 'bg-slate-50 text-slate-300 pointer-events-none'}`}
+                                    >
+                                        <ChevronLeft className="w-4 h-4" />
+                                        Anterior
+                                    </Link>
+
+                                    <div className="flex flex-col items-center">
+                                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Página</span>
+                                        <span className="text-sm font-black text-slate-900">{page} <span className="text-slate-300 mx-1">/</span> {pagination.totalPages}</span>
+                                    </div>
+
+                                    <Link
+                                        href={`/dashboard/inventory/link?page=${Math.min(pagination.totalPages, page + 1)}${search ? `&search=${search}` : ''}`}
+                                        className={`flex items-center gap-2 px-6 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all active:scale-95 ${page < pagination.totalPages ? 'bg-white border-2 border-slate-100 text-slate-600 shadow-sm' : 'bg-slate-50 text-slate-300 pointer-events-none'}`}
+                                    >
+                                        Próxima
+                                        <ChevronRight className="w-4 h-4" />
+                                    </Link>
+                                </div>
                             )}
                         </>
                     ) : (
                         <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-slate-200">
                             <Check className="w-12 h-12 text-emerald-500 mx-auto mb-4" />
-                            <h3 className="font-black text-slate-900">Tudo em ordem!</h3>
+                            <h3 className="font-black text-slate-900">Tudo pronto!</h3>
                             <p className="text-slate-400 text-xs">Nenhum produto pendente de identificação.</p>
                         </div>
                     )}
@@ -218,8 +222,8 @@ export default function InventoryLinkPage() {
             />
 
             {scannedCode && selectedProduct && (
-                <div className="fixed inset-0 z-110 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-                    <div className="bg-white w-full max-w-sm rounded-[32px] overflow-hidden shadow-2xl animate-in zoom-in-95 duration-200">
+                <div className="fixed inset-0 z-10000 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-md animate-in fade-in duration-300">
+                    <div className="bg-white w-full max-w-sm rounded-[32px] overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300">
                         <div className="p-8 text-center">
                             <div className="w-20 h-20 bg-slate-50 rounded-3xl mx-auto flex items-center justify-center border border-slate-100 mb-6">
                                 <Barcode className="w-10 h-10 text-slate-900" />

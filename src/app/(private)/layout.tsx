@@ -7,6 +7,7 @@ import { LayoutGrid, Package, Barcode } from "lucide-react";
 
 export default function PrivateLayout({ children }: { children: ReactNode }) {
     const pathname = usePathname();
+    const isDashboard = pathname === "/dashboard";
 
     const isActive = (path: string) => {
         if (path === "/dashboard" && pathname === "/dashboard") return true;
@@ -16,12 +17,12 @@ export default function PrivateLayout({ children }: { children: ReactNode }) {
 
     return (
         <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-blue-100">
-            <main className="mx-auto w-full h-screen bg-white shadow-sm relative pb-32">
+            <main className={`mx-auto w-full min-h-screen bg-white shadow-sm relative ${isDashboard ? 'pb-32' : ''}`}>
                 <div className="">
                     {children}
                 </div>
 
-                {!pathname.includes('/inventory/scan') && (
+                {isDashboard && (
                     <div className="fixed bottom-4 left-0 right-0 flex justify-center z-50 px-6">
                         <nav className="w-full max-w-[440px] h-20 bg-slate-900 border-t-2 border-blue-600/30 rounded-2xl px-10 flex items-center justify-between shadow-2xl">
 

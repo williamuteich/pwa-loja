@@ -87,12 +87,12 @@ export async function updateStockProduct(id: string, data: { quantity?: number, 
     }
 }
 
-export async function getProductsMissingInfo(page: number = 1, limit: number = 20) {
+export async function getProductsMissingInfo(page: number = 1, limit: number = 20, search: string = "") {
     try {
         const API_URL = await getApiUrl();
         const cookieStore = await cookies();
 
-        const res = await fetch(`${API_URL}/api/private/stock/pending?page=${page}&limit=${limit}`, {
+        const res = await fetch(`${API_URL}/api/private/stock/pending?page=${page}&limit=${limit}${search ? `&search=${search}` : ''}`, {
             headers: {
                 Cookie: cookieStore.toString()
             },
