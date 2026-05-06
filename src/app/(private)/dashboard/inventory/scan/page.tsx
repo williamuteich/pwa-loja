@@ -57,7 +57,7 @@ export default function ScanPage() {
             );
             setIsScannerReady(true);
         } catch (err) {
-            console.error("Scanner fail:", err);
+            console.warn("Scanner não iniciado (Câmera não encontrada).");
         }
     };
 

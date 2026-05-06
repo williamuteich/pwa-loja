@@ -63,17 +63,18 @@ export const ScannerModal: React.FC<ScannerModalProps> = ({
 
             setIsScannerReady(true);
         } catch (err) {
-            console.error("Erro ao iniciar scanner:", err);
+            // Silencia o erro vermelho no console já que temos fallback manual
+            console.warn("Câmera não disponível, usando fallback manual.");
             try {
                 if (html5QrCodeRef.current) {
                     await html5QrCodeRef.current.start({ facingMode: "user" }, { fps: 10, qrbox: 250 }, (text) => {
-                        onScan(text);
-                        stopScanner();
-                    }, () => { });
+                         onScan(text);
+                         stopScanner();
+                    }, () => {});
                     setIsScannerReady(true);
                 }
             } catch (finalErr) {
-                console.error("Falha total ao acessar câmera:", finalErr);
+                // Falha total é esperada em dispositivos sem câmera
             }
         }
     };
@@ -116,7 +117,7 @@ export const ScannerModal: React.FC<ScannerModalProps> = ({
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex flex-col bg-black animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-9999 flex flex-col bg-black animate-in fade-in duration-200">
             <div className="absolute top-0 inset-x-0 z-20 p-6 flex items-center justify-between bg-linear-to-b from-black/80 to-transparent">
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-emerald-500 rounded-2xl flex items-center justify-center text-white shadow-lg">
@@ -156,10 +157,10 @@ export const ScannerModal: React.FC<ScannerModalProps> = ({
                         <div>
                             <span className="text-white text-xs font-black uppercase tracking-widest block mb-2">Acessando Câmera...</span>
                             <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest leading-relaxed">
-                                Se a câmera não abrir em instantes,<br/>use a entrada manual abaixo.
+                                Se a câmera não abrir em instantes,<br />use a entrada manual abaixo.
                             </p>
                         </div>
-                        <button 
+                        <button
                             onClick={() => {
                                 const code = prompt("Digite o código:");
                                 if (code) {
