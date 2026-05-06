@@ -34,9 +34,9 @@ export function ProductItem({ product, backendUrl }: ProductItemProps) {
     if (!isVisible) return null
 
     return (
-        <div className="bg-white border-2 border-slate-100 p-4 rounded-xl flex items-center justify-between active:border-blue-200 transition-colors shadow-sm">
+        <div className="bg-white border border-slate-100 p-4 rounded-2xl flex flex-col md:flex-row md:items-center justify-between shadow-sm hover:shadow-md transition-all gap-4 group">
             <div className="flex items-center gap-4">
-                <div className="w-16 h-16 bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-center font-black text-slate-300 overflow-hidden">
+                <div className="w-16 h-16 bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-center font-black text-slate-300 overflow-hidden shadow-sm shrink-0">
                     {imageUrl ? (
                         <img src={imageUrl} alt={product.title} className="w-full h-full object-cover" />
                     ) : (
@@ -44,46 +44,48 @@ export function ProductItem({ product, backendUrl }: ProductItemProps) {
                     )}
                 </div>
                 <div className="flex flex-col">
-                    <div className="flex flex-wrap gap-1 mb-1">
+                    <h3 className="font-bold text-slate-900 text-sm leading-tight max-w-[180px] md:max-w-xs truncate">{product.title}</h3>
+
+                    <div className="flex flex-wrap gap-1.5 mt-1 mb-1.5">
                         {product.barcode ? (
-                            <span className="text-[8px] font-black bg-amber-50 text-amber-600 px-1.5 py-0.5 rounded border border-amber-100 uppercase tracking-tighter flex items-center gap-1">
-                                <Barcode className="w-2.5 h-2.5" /> {product.barcode}
+                            <span className="text-[10px] font-bold bg-amber-50 text-amber-700 px-2 py-0.5 rounded-md border border-amber-200/60 uppercase tracking-wide flex items-center gap-1">
+                                <Barcode className="w-3 h-3" /> {product.barcode}
                             </span>
                         ) : (
-                            <span className="text-[8px] font-black bg-slate-50 text-slate-300 px-1.5 py-0.5 rounded border border-slate-100 uppercase tracking-tighter">SEM EAN</span>
+                            <span className="text-[10px] font-bold bg-slate-50 text-slate-500 px-2 py-0.5 rounded-md border border-slate-200/60 uppercase tracking-wide">S/ EAN</span>
                         )}
                         {product.sku ? (
-                            <span className="text-[8px] font-black bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded border border-blue-100 uppercase tracking-tighter flex items-center gap-1">
-                                <Hash className="w-2.5 h-2.5" /> {product.sku}
+                            <span className="text-[10px] font-bold bg-blue-50 text-blue-700 px-2 py-0.5 rounded-md border border-blue-200/60 uppercase tracking-wide flex items-center gap-1">
+                                <Hash className="w-3 h-3" /> {product.sku}
                             </span>
                         ) : (
-                            <span className="text-[8px] font-black bg-slate-50 text-slate-300 px-1.5 py-0.5 rounded border border-slate-100 uppercase tracking-tighter">SEM SKU</span>
+                            <span className="text-[10px] font-bold bg-slate-50 text-slate-500 px-2 py-0.5 rounded-md border border-slate-200/60 uppercase tracking-wide">S/ SKU</span>
                         )}
                     </div>
-                    <h3 className="font-bold text-slate-900 text-sm leading-tight max-w-[140px] truncate">{product.title}</h3>
-                    <span className="text-slate-900 font-black text-lg mt-0.5">
+
+                    <span className="text-slate-900 font-black text-base leading-none">
                         R$ {Number(product.price).toFixed(2).replace('.', ',')}
                     </span>
                 </div>
             </div>
-            <div className="flex flex-col items-end gap-3">
-                <div className="flex items-center gap-2">
-                    <div className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase ${stock > 0 || (product.variants?.reduce((acc, v) => acc + v.quantity, 0) || 0) > 0 ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-rose-50 text-rose-600 border border-rose-100'}`}>
-                        {stock > 0 || (product.variants?.some(v => v.quantity > 0))
-                            ? (product.variants && product.variants.length > 0
-                                ? `${product.variants.reduce((acc, v) => acc + v.quantity, 0)} un`
-                                : `${stock} un`)
-                            : "SEM ESTOQUE"
-                        }
-                    </div>
+
+            <div className="flex items-center md:flex-col md:items-end justify-between md:justify-center gap-4 w-full md:w-auto mt-2 md:mt-0">
+                <div className={`px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider ${stock > 0 || (product.variants?.reduce((acc, v) => acc + v.quantity, 0) || 0) > 0 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/60' : 'bg-rose-50 text-rose-700 border border-rose-200/60'}`}>
+                    {stock > 0 || (product.variants?.some(v => v.quantity > 0))
+                        ? (product.variants && product.variants.length > 0
+                            ? `${product.variants.reduce((acc, v) => acc + v.quantity, 0)} UNIDADES.`
+                            : `${stock} UNIDADES.`)
+                        : "S/ ESTOQUE"
+                    }
                 </div>
+
                 <div className="flex gap-2">
-                    <Link href={`/dashboard/products/${product.id}/edit`} className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 hover:text-blue-600 transition-colors">
+                    <Link href={`/dashboard/products/${product.id}/edit`} className="w-9 h-9 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-500 hover:text-blue-600 hover:bg-slate-50 hover:border-blue-200 transition-all shadow-sm">
                         <Edit3 className="w-4 h-4" />
                     </Link>
                     <button
                         onClick={() => setIsConfirmOpen(true)}
-                        className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 hover:text-rose-600 transition-colors"
+                        className="w-9 h-9 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-500 hover:text-rose-600 hover:bg-slate-50 hover:border-rose-200 transition-all shadow-sm"
                     >
                         <Trash2 className="w-4 h-4" />
                     </button>

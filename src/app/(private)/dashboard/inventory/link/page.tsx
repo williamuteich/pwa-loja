@@ -137,9 +137,9 @@ function InventoryLinkContent() {
                     ) : pendingProducts.length > 0 ? (
                         <>
                             {pendingProducts.map((product) => (
-                                <div key={product.id} className="bg-white border-2 border-slate-100 p-4 rounded-2xl flex items-center justify-between shadow-sm group transition-all">
+                                <div key={product.id} className="bg-white border border-slate-100 p-4 rounded-2xl flex items-center justify-between shadow-sm hover:shadow-md group transition-all">
                                     <div className="flex items-center gap-4 min-w-0">
-                                        <div className="w-16 h-16 rounded-xl bg-slate-50 border border-slate-100 overflow-hidden shrink-0">
+                                        <div className="w-16 h-16 rounded-xl bg-slate-50 border border-slate-100 overflow-hidden shrink-0 shadow-sm">
                                             {product.images && product.images.length > 0 ? (
                                                 <img
                                                     src={getImageUrl(product.images[0].url) || ""}
@@ -152,25 +152,25 @@ function InventoryLinkContent() {
                                                 </div>
                                             )}
                                         </div>
-                                        <div className="flex flex-col gap-1 min-w-0">
+                                        <div className="flex flex-col gap-1.5 min-w-0">
                                             <div className="flex items-center gap-2">
-                                                <h3 className="font-black text-slate-900 text-sm truncate">{product.title}</h3>
-                                                <div className="px-1.5 py-0.5 bg-rose-50 rounded-md shrink-0">
-                                                    <AlertCircle className="w-3 h-3 text-rose-500" />
+                                                <h3 className="font-bold text-slate-900 text-sm leading-tight truncate">{product.title}</h3>
+                                                <div className="px-1.5 py-0.5 bg-rose-50 border border-rose-200/60 rounded-md shrink-0">
+                                                    <AlertCircle className="w-3 h-3 text-rose-600" />
                                                 </div>
                                             </div>
-                                            <div className="flex gap-2">
-                                                {!product.barcode && <span className="text-[9px] font-black bg-slate-50 text-slate-400 px-2 py-0.5 rounded-full uppercase tracking-tighter">Falta EAN</span>}
-                                                {!product.sku && <span className="text-[9px] font-black bg-slate-50 text-slate-400 px-2 py-0.5 rounded-full uppercase tracking-tighter">Falta SKU</span>}
+                                            <div className="flex flex-wrap gap-1.5">
+                                                {!product.barcode && <span className="text-[10px] font-bold bg-slate-50 text-slate-500 border border-slate-200/60 px-2 py-0.5 rounded-md uppercase tracking-wide">Falta EAN</span>}
+                                                {!product.sku && <span className="text-[10px] font-bold bg-slate-50 text-slate-500 border border-slate-200/60 px-2 py-0.5 rounded-md uppercase tracking-wide">Falta SKU</span>}
                                             </div>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-2 shrink-0 ml-4">
-                                        <button onClick={() => { setSelectedProduct(product); setIsScannerOpen(true); }} className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-400 hover:bg-emerald-500 hover:text-white active:scale-95 transition-all shadow-sm">
-                                            <QrCode className="w-6 h-6" />
+                                        <button onClick={() => { setSelectedProduct(product); setIsScannerOpen(true); }} className="w-10 h-10 bg-white border border-slate-200 rounded-xl flex items-center justify-center text-slate-500 hover:bg-slate-50 hover:text-emerald-600 hover:border-emerald-200 transition-all shadow-sm">
+                                            <QrCode className="w-5 h-5" />
                                         </button>
-                                        <button onClick={() => { setSelectedProduct(product); setIsManualInputOpen(true); }} className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-400 hover:bg-slate-900 hover:text-white active:scale-95 transition-all shadow-sm">
-                                            <Barcode className="w-6 h-6" />
+                                        <button onClick={() => { setSelectedProduct(product); setIsManualInputOpen(true); }} className="w-10 h-10 bg-white border border-slate-200 rounded-xl flex items-center justify-center text-slate-500 hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300 transition-all shadow-sm">
+                                            <Barcode className="w-5 h-5" />
                                         </button>
                                     </div>
                                 </div>
