@@ -60,19 +60,12 @@ export const ProductMedia: React.FC<ProductMediaProps> = ({
     };
 
     return (
-        <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm">
-            <div className="h-1 w-full bg-linear-to-r from-blue-500 to-indigo-500" />
-
-            <div className="p-5 space-y-5">
+        <div className="bg-white rounded-[32px] border border-slate-100 overflow-hidden">
+            <div className="p-8 space-y-8">
                 <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 bg-blue-500 rounded-xl flex items-center justify-center shadow-md shadow-blue-100 text-white">
-                            <ImageIcon className="w-5 h-5" />
-                        </div>
-                        <div>
-                            <p className="text-sm font-black text-slate-900">Fotos do Produto</p>
-                            <p className="text-[10px] font-bold text-slate-400">Primeira foto = principal</p>
-                        </div>
+                    <div>
+                        <h2 className="text-sm font-black text-slate-900 uppercase tracking-widest">Fotos do Produto</h2>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Primeira foto = principal</p>
                     </div>
                     <span className="text-[10px] font-black text-slate-400 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-100">
                         {images.length}/6

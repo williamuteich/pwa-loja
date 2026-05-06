@@ -1,5 +1,5 @@
 import React from "react";
-import { Palette, Plus, Trash2, Box } from "lucide-react";
+import { Plus, Trash2, Box } from "lucide-react";
 import { Product } from "@/src/types/products/product";
 
 interface ProductVariantsProps {
@@ -26,7 +26,7 @@ export const ProductVariants: React.FC<ProductVariantsProps> = ({
     const updateVariant = (index: number, field: string, value: any) => {
         const currentVariants = product.variants || [];
         const newVariants = [...currentVariants];
-        
+
         let finalValue = value;
         if (field === "stock") {
             finalValue = Math.max(0, parseInt(value) || 0);
@@ -45,18 +45,12 @@ export const ProductVariants: React.FC<ProductVariantsProps> = ({
     };
 
     return (
-        <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm">
-            <div className="h-1 w-full bg-linear-to-r from-pink-500 to-rose-500" />
-            <div className="p-5 space-y-5">
+        <div className="bg-white rounded-[32px] border border-slate-100 overflow-hidden">
+            <div className="p-8 space-y-8">
                 <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 bg-rose-500 rounded-xl flex items-center justify-center shadow-md shadow-rose-100 text-white">
-                            <Palette className="w-5 h-5" />
-                        </div>
-                        <div>
-                            <p className="text-sm font-black text-slate-900">Cores e Variantes</p>
-                            <p className="text-[10px] font-bold text-slate-400">Gerenciamento de opções</p>
-                        </div>
+                    <div>
+                        <h2 className="text-sm font-black text-slate-900 uppercase tracking-widest">Cores e Variantes</h2>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Gerenciamento de opções</p>
                     </div>
                     <button
                         type="button"
@@ -115,9 +109,9 @@ export const ProductVariants: React.FC<ProductVariantsProps> = ({
                     ))}
                 </div>
 
-                <div className="flex items-center justify-between px-5 py-4 bg-slate-900 rounded-2xl">
+                <div className="flex items-center justify-between px-5 py-4 bg-slate-50 border border-slate-100 rounded-2xl">
                     <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Total variantes</span>
-                    <span className="text-lg font-black text-white">
+                    <span className="text-lg font-black text-slate-900">
                         {variants.reduce((acc: number, curr: any) => acc + (curr.stock || 0), 0)} und.
                     </span>
                 </div>

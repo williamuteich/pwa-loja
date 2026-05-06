@@ -1,5 +1,4 @@
 import React from "react";
-import { DollarSign, Tag } from "lucide-react";
 import { Product } from "@/src/types/products/product";
 
 interface ProductPricingProps {
@@ -30,17 +29,11 @@ export const ProductPricing: React.FC<ProductPricingProps> = ({
     };
 
     return (
-        <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm">
-            <div className="h-1 w-full bg-linear-to-r from-emerald-400 to-teal-500" />
-            <div className="p-5 space-y-5">
-                <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 bg-emerald-500 rounded-xl flex items-center justify-center shadow-md shadow-emerald-100 text-white">
-                        <DollarSign className="w-5 h-5" />
-                    </div>
-                    <div>
-                        <p className="text-sm font-black text-slate-900">Precificação</p>
-                        <p className="text-[10px] font-bold text-slate-400">Valores de venda e promoção</p>
-                    </div>
+        <div className="bg-white rounded-[32px] border border-slate-100 overflow-hidden">
+            <div className="p-8 space-y-8">
+                <div>
+                    <h2 className="text-sm font-black text-slate-900 uppercase tracking-widest">Precificação</h2>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Valores de venda e promoção</p>
                 </div>
 
                 <div className="space-y-4">

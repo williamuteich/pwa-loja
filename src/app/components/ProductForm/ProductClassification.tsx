@@ -1,5 +1,5 @@
 import React from "react";
-import { Tag, Check, ChevronDown, Award } from "lucide-react";
+import { Check, ChevronDown, Award } from "lucide-react";
 import { Product } from "@/src/types/products/product";
 import { Category } from "@/src/types/products/category";
 import { Brand } from "@/src/types/products/brand";
@@ -18,17 +18,11 @@ export const ProductClassification: React.FC<ProductClassificationProps> = ({
     brands,
 }) => {
     return (
-        <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm">
-            <div className="h-1 w-full bg-linear-to-r from-violet-500 to-purple-500" />
-            <div className="p-5 space-y-5">
-                <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 bg-violet-500 rounded-xl flex items-center justify-center shadow-md shadow-violet-100 text-white">
-                        <Tag className="w-5 h-5" />
-                    </div>
-                    <div>
-                        <p className="text-sm font-black text-slate-900">Classificação</p>
-                        <p className="text-[10px] font-bold text-slate-400">Marca e categorias do produto</p>
-                    </div>
+        <div className="bg-white rounded-[32px] border border-slate-100 overflow-hidden">
+            <div className="p-8 space-y-8">
+                <div>
+                    <h2 className="text-sm font-black text-slate-900 uppercase tracking-widest">Organização</h2>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Categorias e marcas</p>
                 </div>
 
                 <div className="space-y-4">

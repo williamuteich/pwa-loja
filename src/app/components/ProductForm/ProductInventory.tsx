@@ -31,17 +31,11 @@ export const ProductInventory: React.FC<ProductInventoryProps> = ({
     };
 
     return (
-        <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm">
-            <div className="h-1 w-full bg-linear-to-r from-amber-400 to-orange-500" />
-            <div className="p-5 space-y-5">
-                <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 bg-amber-500 rounded-xl flex items-center justify-center shadow-md shadow-amber-100 text-white">
-                        <Box className="w-5 h-5" />
-                    </div>
-                    <div>
-                        <p className="text-sm font-black text-slate-900">Estoque & Identificação</p>
-                        <p className="text-[10px] font-bold text-slate-400">Código e quantidade em estoque</p>
-                    </div>
+        <div className="bg-white rounded-[32px] border border-slate-100 overflow-hidden">
+            <div className="p-8 space-y-8">
+                <div>
+                    <h2 className="text-sm font-black text-slate-900 uppercase tracking-widest">Estoque & Identificação</h2>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Código e quantidade em estoque</p>
                 </div>
 
                 <div className="space-y-4">

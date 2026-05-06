@@ -90,7 +90,6 @@ export function UnifiedScanner({ onScan, onClose, title = "Escanear Produto", is
         <div className={`fixed inset-0 z-9999 flex flex-col bg-black animate-in fade-in duration-200`}>
             <div id="unified-reader" className="absolute inset-0 z-0 h-full w-full"></div>
 
-            {/* Mira Industrial Quadrada (Alinhada perfeitamente com o qrbox 250) */}
             <div className="absolute inset-0 z-10 pointer-events-none flex items-center justify-center">
                 <div className="w-64 h-64 relative flex items-center justify-center">
                     <div className="absolute top-0 left-0 w-10 h-10 border-t-4 border-l-4 border-emerald-500 rounded-tl-3xl shadow-[0_0_15px_rgba(16,185,129,0.5)]"></div>
@@ -98,14 +97,11 @@ export function UnifiedScanner({ onScan, onClose, title = "Escanear Produto", is
                     <div className="absolute bottom-0 left-0 w-10 h-10 border-b-4 border-l-4 border-emerald-500 rounded-bl-3xl shadow-[0_0_15px_rgba(16,185,129,0.5)]"></div>
                     <div className="absolute bottom-0 right-0 w-10 h-10 border-b-4 border-r-4 border-emerald-500 rounded-br-3xl shadow-[0_0_15px_rgba(16,185,129,0.5)]"></div>
 
-                    {/* Ícone Guia no Centro */}
                     <Barcode className="w-16 h-16 text-white/20" />
 
-                    {/* Linha de Scanner Animada (ajustada para o tamanho da mira) */}
                     <div className="absolute top-1/2 left-0 w-full h-[2px] bg-emerald-400 shadow-[0_0_20px_rgba(52,211,153,1)] animate-scan-square"></div>
                 </div>
 
-                {/* Texto de Instrução */}
                 <p className="absolute bottom-[20%] text-white/60 text-[10px] font-black uppercase tracking-[0.3em]">
                     Centralize o código na marcação
                 </p>

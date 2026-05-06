@@ -160,13 +160,13 @@ export default function NewProductPage() {
                 <ProductMedia product={product} setProduct={setProduct} setImageFiles={setImageFiles} />
                 <ProductInfo product={product} setProduct={setProduct} />
                 <ProductPricing product={product} setProduct={setProduct} />
-                <ProductInventory product={product} setProduct={setProduct} />
                 <ProductClassification
                     product={product}
                     setProduct={setProduct}
                     categories={categories}
                     brands={brands}
                 />
+                <ProductInventory product={product} setProduct={setProduct} />
                 <ProductVariants product={product} setProduct={setProduct} />
                 <ProductVisibility product={product} setProduct={setProduct} />
             </div>
