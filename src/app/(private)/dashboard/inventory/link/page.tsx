@@ -83,6 +83,8 @@ function InventoryLinkContent() {
             setPagination(prev => ({ ...prev, total: prev.total - 1 }))
             setScannedCode(null)
             setSelectedProduct(null)
+        } else {
+            alert(res.error)
         }
         setUpdating(false)
     }
@@ -102,6 +104,8 @@ function InventoryLinkContent() {
             setPagination(prev => ({ ...prev, total: prev.total - 1 }))
             setIsManualInputOpen(false)
             setSelectedProduct(null)
+        } else {
+            alert(res.error)
         }
         setUpdating(false)
     }

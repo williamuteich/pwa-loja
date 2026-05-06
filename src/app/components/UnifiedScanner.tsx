@@ -1,6 +1,6 @@
 "use client"
 
-import { X, ArrowLeft, QrCode, Zap, ZapOff, RefreshCcw } from "lucide-react"
+import { X, ArrowLeft, QrCode, Zap, ZapOff, RefreshCcw, Barcode } from "lucide-react"
 import { useState, useEffect, useRef } from "react"
 import { Html5Qrcode } from "html5-qrcode"
 import { ManualInputModal } from "./ManualInputModal"
@@ -34,7 +34,10 @@ export function UnifiedScanner({ onScan, onClose, title = "Escanear Produto", is
 
             await html5QrCodeRef.current.start(
                 { facingMode: "environment" },
-                { fps: 10, qrbox: { width: 280, height: 180 } },
+                {
+                    fps: 15,
+                    qrbox: 250
+                },
                 (text) => {
                     onScan(text)
                     if (!isPage) stopScanner()
@@ -46,10 +49,15 @@ export function UnifiedScanner({ onScan, onClose, title = "Escanear Produto", is
             console.warn("Câmera primária falhou, tentando secundária...")
             try {
                 if (html5QrCodeRef.current) {
-                    await html5QrCodeRef.current.start({ facingMode: "user" }, { fps: 10, qrbox: 250 }, (text) => {
-                        onScan(text)
-                        if (!isPage) stopScanner()
-                    }, () => { })
+                    await html5QrCodeRef.current.start(
+                        { facingMode: "user" },
+                        { fps: 15, qrbox: 250 },
+                        (text) => {
+                            onScan(text)
+                            if (!isPage) stopScanner()
+                        },
+                        () => { }
+                    )
                     setIsScannerReady(true)
                 }
             } catch (finalErr) { }
@@ -82,14 +90,25 @@ export function UnifiedScanner({ onScan, onClose, title = "Escanear Produto", is
         <div className={`fixed inset-0 z-9999 flex flex-col bg-black animate-in fade-in duration-200`}>
             <div id="unified-reader" className="absolute inset-0 z-0 h-full w-full"></div>
 
+            {/* Mira Industrial Quadrada (Alinhada perfeitamente com o qrbox 250) */}
             <div className="absolute inset-0 z-10 pointer-events-none flex items-center justify-center">
-                <div className="w-72 h-44 relative">
+                <div className="w-64 h-64 relative flex items-center justify-center">
                     <div className="absolute top-0 left-0 w-10 h-10 border-t-4 border-l-4 border-emerald-500 rounded-tl-3xl shadow-[0_0_15px_rgba(16,185,129,0.5)]"></div>
                     <div className="absolute top-0 right-0 w-10 h-10 border-t-4 border-r-4 border-emerald-500 rounded-tr-3xl shadow-[0_0_15px_rgba(16,185,129,0.5)]"></div>
                     <div className="absolute bottom-0 left-0 w-10 h-10 border-b-4 border-l-4 border-emerald-500 rounded-bl-3xl shadow-[0_0_15px_rgba(16,185,129,0.5)]"></div>
                     <div className="absolute bottom-0 right-0 w-10 h-10 border-b-4 border-r-4 border-emerald-500 rounded-br-3xl shadow-[0_0_15px_rgba(16,185,129,0.5)]"></div>
-                    <div className="absolute top-1/2 left-0 w-full h-[2px] bg-emerald-400 shadow-[0_0_20px_rgba(52,211,153,1)] animate-scan-slow"></div>
+
+                    {/* Ícone Guia no Centro */}
+                    <Barcode className="w-16 h-16 text-white/20" />
+
+                    {/* Linha de Scanner Animada (ajustada para o tamanho da mira) */}
+                    <div className="absolute top-1/2 left-0 w-full h-[2px] bg-emerald-400 shadow-[0_0_20px_rgba(52,211,153,1)] animate-scan-square"></div>
                 </div>
+
+                {/* Texto de Instrução */}
+                <p className="absolute bottom-[20%] text-white/60 text-[10px] font-black uppercase tracking-[0.3em]">
+                    Centralize o código na marcação
+                </p>
             </div>
 
             <div className="absolute top-0 inset-x-0 z-30 p-6 flex items-center justify-between bg-linear-to-b from-black/80 to-transparent">
@@ -154,13 +173,13 @@ export function UnifiedScanner({ onScan, onClose, title = "Escanear Produto", is
             />
 
             <style jsx>{`
-                @keyframes scan-slow {
-                    0% { transform: translateY(-90px); opacity: 0; }
+                @keyframes scan-square {
+                    0% { transform: translateY(-120px); opacity: 0; }
                     50% { opacity: 1; }
-                    100% { transform: translateY(90px); opacity: 0; }
+                    100% { transform: translateY(120px); opacity: 0; }
                 }
-                .animate-scan-slow {
-                    animation: scan-slow 2s ease-in-out infinite;
+                .animate-scan-square {
+                    animation: scan-square 2s ease-in-out infinite;
                 }
             `}</style>
         </div>
