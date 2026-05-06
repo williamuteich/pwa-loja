@@ -1,6 +1,6 @@
 "use client"
 
-import { Edit3, Trash2, Image as ImageIcon } from "lucide-react"
+import { Edit3, Trash2, Image as ImageIcon, Barcode, Hash } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
 import { Product } from "@/src/types/products/product"
@@ -49,11 +49,24 @@ export function ProductItem({ product, backendUrl }: ProductItemProps) {
                     )}
                 </div>
                 <div className="flex flex-col">
-                    <span className="text-[9px] font-black text-blue-500 uppercase tracking-widest">
-                        {product.sku || "SEM CÓDIGO"}
-                    </span>
+                    <div className="flex flex-wrap gap-1 mb-1">
+                        {product.barcode ? (
+                            <span className="text-[8px] font-black bg-amber-50 text-amber-600 px-1.5 py-0.5 rounded border border-amber-100 uppercase tracking-tighter flex items-center gap-1">
+                                <Barcode className="w-2.5 h-2.5" /> {product.barcode}
+                            </span>
+                        ) : (
+                            <span className="text-[8px] font-black bg-slate-50 text-slate-300 px-1.5 py-0.5 rounded border border-slate-100 uppercase tracking-tighter">SEM EAN</span>
+                        )}
+                        {product.sku ? (
+                            <span className="text-[8px] font-black bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded border border-blue-100 uppercase tracking-tighter flex items-center gap-1">
+                                <Hash className="w-2.5 h-2.5" /> {product.sku}
+                            </span>
+                        ) : (
+                            <span className="text-[8px] font-black bg-slate-50 text-slate-300 px-1.5 py-0.5 rounded border border-slate-100 uppercase tracking-tighter">SEM SKU</span>
+                        )}
+                    </div>
                     <h3 className="font-bold text-slate-900 text-sm leading-tight max-w-[140px] truncate">{product.title}</h3>
-                    <span className="text-slate-900 font-black text-lg mt-1">
+                    <span className="text-slate-900 font-black text-lg mt-0.5">
                         R$ {Number(product.price).toFixed(2).replace('.', ',')}
                     </span>
                 </div>

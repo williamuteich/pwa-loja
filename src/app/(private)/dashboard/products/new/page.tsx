@@ -92,6 +92,7 @@ export default function NewProductPage() {
             formData.append("quantity", finalQuantity.toString());
             formData.append("isActive", String(product.isActive));
             formData.append("barcode", product.barcode || "");
+            formData.append("sku", product.sku || "");
             formData.append("costPrice", (product.costPrice || 0).toString());
 
             if (product.brandId) {
