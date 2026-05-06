@@ -1,13 +1,7 @@
 import React from "react";
-import { Product, ProductImage } from "@/src/types/products/product";
-import { ImageIcon, Camera, Plus, X, UploadCloud } from "lucide-react";
+import { ProductImage, ProductMediaProps } from "@/src/types/products/product";
+import { Camera, Plus, X, UploadCloud } from "lucide-react";
 import { useRef } from "react";
-
-interface ProductMediaProps {
-    product: Product;
-    setProduct: React.Dispatch<React.SetStateAction<Product>>;
-    setImageFiles: React.Dispatch<React.SetStateAction<File[]>>;
-}
 
 export const ProductMedia: React.FC<ProductMediaProps> = ({
     product,

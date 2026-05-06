@@ -1,10 +1,5 @@
 import React from "react";
-import { Product } from "@/src/types/products/product";
-
-interface ProductPricingProps {
-    product: Product;
-    setProduct: React.Dispatch<React.SetStateAction<Product>>;
-}
+import { ProductPricingProps } from "@/src/types/products/product";
 
 export const ProductPricing: React.FC<ProductPricingProps> = ({
     product,

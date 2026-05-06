@@ -1,11 +1,6 @@
 import React from "react";
 import { AlignLeft } from "lucide-react";
-import { Product } from "@/src/types/products/product";
-
-interface ProductInfoProps {
-    product: Product;
-    setProduct: React.Dispatch<React.SetStateAction<Product>>;
-}
+import { ProductInfoProps } from "@/src/types/products/product";
 
 export const ProductInfo: React.FC<ProductInfoProps> = ({
     product,

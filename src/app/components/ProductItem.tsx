@@ -3,14 +3,9 @@
 import { Edit3, Trash2, Image as ImageIcon, Barcode, Hash } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
-import { Product } from "@/src/types/products/product"
 import { deleteProduct } from "@/src/services/product"
 import { ConfirmModal } from "./ConfirmModal"
-
-interface ProductItemProps {
-    product: Product
-    backendUrl: string
-}
+import { ProductItemProps } from "@/src/types/products/product"
 
 export function ProductItem({ product, backendUrl }: ProductItemProps) {
     const [isDeleting, setIsDeleting] = useState(false)
@@ -86,7 +81,7 @@ export function ProductItem({ product, backendUrl }: ProductItemProps) {
                     <Link href={`/dashboard/products/${product.id}/edit`} className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 hover:text-blue-600 transition-colors">
                         <Edit3 className="w-4 h-4" />
                     </Link>
-                    <button 
+                    <button
                         onClick={() => setIsConfirmOpen(true)}
                         className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 hover:text-rose-600 transition-colors"
                     >
@@ -95,7 +90,7 @@ export function ProductItem({ product, backendUrl }: ProductItemProps) {
                 </div>
             </div>
 
-            <ConfirmModal 
+            <ConfirmModal
                 isOpen={isConfirmOpen}
                 onClose={() => setIsConfirmOpen(false)}
                 onConfirm={handleDelete}

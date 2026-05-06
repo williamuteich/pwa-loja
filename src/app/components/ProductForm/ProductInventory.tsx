@@ -1,12 +1,7 @@
 import React, { useState } from "react";
 import { Barcode, Box, Scan, Hash } from "lucide-react";
-import { Product } from "@/src/types/products/product";
 import { ScannerModal } from "@/src/app/components/ScannerModal";
-
-interface ProductInventoryProps {
-    product: Product;
-    setProduct: React.Dispatch<React.SetStateAction<Product>>;
-}
+import { ProductInventoryProps } from "@/src/types/products/product";
 
 export const ProductInventory: React.FC<ProductInventoryProps> = ({
     product,
@@ -104,10 +99,10 @@ export const ProductInventory: React.FC<ProductInventoryProps> = ({
                 </div>
             </div>
 
-            <ScannerModal 
-                isOpen={isScannerOpen} 
-                onClose={() => setIsScannerOpen(false)} 
-                onScan={handleScan} 
+            <ScannerModal
+                isOpen={isScannerOpen}
+                onClose={() => setIsScannerOpen(false)}
+                onScan={handleScan}
             />
         </div>
     );

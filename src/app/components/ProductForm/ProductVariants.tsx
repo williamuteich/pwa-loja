@@ -1,11 +1,6 @@
 import React from "react";
 import { Plus, Trash2, Box } from "lucide-react";
-import { Product } from "@/src/types/products/product";
-
-interface ProductVariantsProps {
-    product: Product;
-    setProduct: React.Dispatch<React.SetStateAction<Product>>;
-}
+import { ProductVariantsProps } from "@/src/types/products/product";
 
 export const ProductVariants: React.FC<ProductVariantsProps> = ({
     product,

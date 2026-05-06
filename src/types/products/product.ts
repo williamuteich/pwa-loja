@@ -1,4 +1,6 @@
 import { ReactNode } from "react";
+import { Category } from "./category";
+import { Brand } from "./brand";
 
 export interface Product {
     id: string;
@@ -83,4 +85,47 @@ export interface ProductsClientProps {
     backendUrl: string;
     title?: ReactNode;
     subtitle?: string;
+}
+
+export interface ProductVariantsProps {
+    product: Product;
+    setProduct: React.Dispatch<React.SetStateAction<Product>>;
+}
+
+export interface ProductVisibilityProps {
+    product: Product;
+    setProduct: React.Dispatch<React.SetStateAction<Product>>;
+}
+
+export interface ProductItemProps {
+    product: Product
+    backendUrl: string
+}
+
+export interface ProductInfoProps {
+    product: Product;
+    setProduct: React.Dispatch<React.SetStateAction<Product>>;
+}
+
+export interface ProductPricingProps {
+    product: Product;
+    setProduct: React.Dispatch<React.SetStateAction<Product>>;
+}
+
+export interface ProductMediaProps {
+    product: Product;
+    setProduct: React.Dispatch<React.SetStateAction<Product>>;
+    setImageFiles: React.Dispatch<React.SetStateAction<File[]>>;
+}
+
+export interface ProductInventoryProps {
+    product: Product;
+    setProduct: React.Dispatch<React.SetStateAction<Product>>;
+}
+
+export interface ProductClassificationProps {
+    product: Product;
+    setProduct: React.Dispatch<React.SetStateAction<Product>>;
+    categories: Category[];
+    brands: Brand[];
 }

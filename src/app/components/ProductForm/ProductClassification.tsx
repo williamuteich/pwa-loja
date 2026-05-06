@@ -1,15 +1,6 @@
 import React from "react";
 import { Check, ChevronDown, Award } from "lucide-react";
-import { Product } from "@/src/types/products/product";
-import { Category } from "@/src/types/products/category";
-import { Brand } from "@/src/types/products/brand";
-
-interface ProductClassificationProps {
-    product: Product;
-    setProduct: React.Dispatch<React.SetStateAction<Product>>;
-    categories: Category[];
-    brands: Brand[];
-}
+import { ProductClassificationProps } from "@/src/types/products/product";
 
 export const ProductClassification: React.FC<ProductClassificationProps> = ({
     product,

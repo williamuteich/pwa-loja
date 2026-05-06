@@ -1,11 +1,6 @@
 import React from "react";
 import { Globe, Settings } from "lucide-react";
-import { Product } from "@/src/types/products/product";
-
-interface ProductVisibilityProps {
-    product: Product;
-    setProduct: React.Dispatch<React.SetStateAction<Product>>;
-}
+import { ProductVisibilityProps } from "@/src/types/products/product";
 
 export const ProductVisibility: React.FC<ProductVisibilityProps> = ({
     product,
