@@ -6,10 +6,7 @@ import { auth } from "@/src/lib/auth-config";
 
 async function getApiUrl() {
     const session = await getServerSession(auth);
-    if (!session?.user?.callbackUrl) {
-        throw new Error("Sessão inválida ou callbackUrl não definido");
-    }
-    return session.user.callbackUrl;
+    return (session?.user as any)?.callbackUrl || "http://localhost:3000";
 }
 
 export async function createStockMovement(data: {
@@ -38,8 +35,7 @@ export async function createStockMovement(data: {
 
         return await res.json();
     } catch (error: any) {
-        console.error("[Service Stock] createStockMovement Error:", error);
-        return { error: error.message || "Erro de conexão ao ajustar estoque" };
+        return { error: "Erro de conexão ao processar estoque" };
     }
 }
 
@@ -59,9 +55,9 @@ export async function getProductByIdentifier(identifier: string) {
             return { error: error.error || "Produto não encontrado" };
         }
 
-        return await res.json();
+        const result = await res.json();
+        return result.data || result;
     } catch (error: any) {
-        console.error("[Service Stock] getProductByIdentifier Error:", error);
         return { error: "Erro de conexão ao buscar produto" };
     }
 }
@@ -87,30 +83,28 @@ export async function updateStockProduct(id: string, data: { quantity?: number, 
 
         return await res.json();
     } catch (error: any) {
-        console.error("[Service Stock] updateStockProduct Error:", error);
         return { error: "Erro de conexão ao atualizar produto" };
     }
 }
 
-export async function getProductsMissingInfo() {
+export async function getProductsMissingInfo(page: number = 1, limit: number = 20) {
     try {
         const API_URL = await getApiUrl();
         const cookieStore = await cookies();
 
-        const res = await fetch(`${API_URL}/api/private/stock/pending`, {
+        const res = await fetch(`${API_URL}/api/private/stock/pending?page=${page}&limit=${limit}`, {
             headers: {
                 Cookie: cookieStore.toString()
-            }
+            },
+            next: { revalidate: 0 }
         });
 
         if (!res.ok) {
-            const error = await res.json().catch(() => ({}));
-            return { error: error.error || "Erro ao buscar produtos" };
+            return { error: "Erro ao buscar produtos" };
         }
 
         return await res.json();
     } catch (error: any) {
-        console.error("[Service Stock] getProductsMissingInfo Error:", error);
-        return { error: "Erro de conexão ao buscar produtos" };
+        return { error: "Erro de conexão" };
     }
 }
