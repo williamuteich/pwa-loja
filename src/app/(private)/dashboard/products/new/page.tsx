@@ -12,8 +12,8 @@ import { ProductVisibility } from "@/src/app/components/ProductForm/ProductVisib
 import { useState, useEffect } from "react";
 import { Product } from "@/src/types/products/product";
 import { createProduct } from "@/src/services/product";
-import { getAdminCategories } from "@/src/services/category"; // Corrigido
-import { getAdminBrands } from "@/src/services/brand"; // Corrigido
+import { getAdminCategories } from "@/src/services/category";
+import { getAdminBrands } from "@/src/services/brand";
 import { useRouter } from "next/navigation";
 import { Category } from "@/src/types/products/category";
 import { Brand } from "@/src/types/products/brand";

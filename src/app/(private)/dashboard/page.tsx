@@ -4,7 +4,6 @@ import {
     Plus,
     Search,
     Barcode,
-    LogOut,
     User,
     QrCode
 } from "lucide-react";
@@ -90,13 +89,13 @@ async function DashboardContent() {
                     </div>
                 </Link>
 
-                <Link href="/dashboard/inventory/link" className="bg-white border-2 border-slate-100 p-6 rounded-xl flex flex-col gap-4 active:border-blue-600 transition-all shadow-md">
+                <Link href="/dashboard/inventory/link" className="bg-white border-2 border-slate-100 p-6 rounded-xl flex flex-col gap-4 active:border-emerald-600 transition-all shadow-md">
                     <div className="w-12 h-12 bg-emerald-600 rounded-lg flex items-center justify-center shadow-lg shadow-emerald-100">
                         <QrCode className="text-white w-6 h-6" />
                     </div>
                     <div className="flex flex-col">
-                        <span className="font-black text-slate-900 text-sm leading-tight">Vincular QR</span>
-                        <span className="text-[9px] font-bold text-slate-400 uppercase mt-1">Novo Código</span>
+                        <span className="font-black text-slate-900 text-sm leading-tight">Vincular Código</span>
+                        <span className="text-[9px] font-bold text-slate-400 uppercase mt-1">Registrar EAN / SKU</span>
                     </div>
                 </Link>
 
