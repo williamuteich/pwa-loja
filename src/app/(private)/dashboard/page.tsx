@@ -76,7 +76,7 @@ async function DashboardContent() {
                     </div>
                     <div className="flex flex-col">
                         <span className="font-black text-slate-900 text-sm leading-tight">Novo Produto</span>
-                        <span className="text-[9px] font-bold text-slate-400 uppercase mt-1">Cadastrar Item</span>
+                        <span className="text-[9px] font-bold text-slate-400 uppercase mt-1">Cadastrar novo Produto</span>
                     </div>
                 </Link>
 
@@ -86,7 +86,7 @@ async function DashboardContent() {
                     </div>
                     <div className="flex flex-col">
                         <span className="font-black text-slate-900 text-sm leading-tight">Scanner / Baixa</span>
-                        <span className="text-[9px] font-bold text-slate-400 uppercase mt-1">Consultar e Sair</span>
+                        <span className="text-[9px] font-bold text-slate-400 uppercase mt-1">Consulta de Produto</span>
                     </div>
                 </Link>
 
@@ -106,7 +106,7 @@ async function DashboardContent() {
                     </div>
                     <div className="flex flex-col">
                         <span className="font-black text-slate-900 text-sm leading-tight">Catálogo</span>
-                        <span className="text-[9px] font-bold text-slate-400 uppercase mt-1">Editar Itens</span>
+                        <span className="text-[9px] font-bold text-slate-400 uppercase mt-1">Gerenciar Produtos</span>
                     </div>
                 </Link>
             </div>

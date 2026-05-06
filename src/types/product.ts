@@ -20,6 +20,7 @@ export interface Product {
     variants?: ProductVariant[];
     quantity?: number;
     barcode?: string | null;
+    sku?: string | null;
     costPrice?: number | null;
     promotionStart?: string | null;
     promotionEnd?: string | null;

@@ -12,10 +12,21 @@ import { getAdminProducts } from "@/src/services/product";
 import { getServerSession } from "next-auth";
 import { auth } from "@/src/lib/auth-config";
 import { Suspense } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
-export default function ProductsPage() {
+
+export default async function ProductsPage({
+    searchParams
+}: {
+    searchParams: Promise<{ page?: string }>
+}) {
+    const session = await getServerSession(auth);
+    const params = await searchParams;
+    const currentPage = Number(params.page) || 1;
+
     return (
         <div className="flex flex-col gap-6 animate-in-view pb-32">
+
             <header className="flex items-center justify-between py-2 px-1">
                 <div className="flex items-center gap-4">
                     <Link href="/dashboard" className="w-10 h-10 bg-white border-2 border-slate-100 rounded-xl flex items-center justify-center text-slate-400 active:scale-95 transition-transform">
@@ -41,16 +52,17 @@ export default function ProductsPage() {
             </div>
 
             <Suspense fallback={<ProductsSkeleton />}>
-                <ProductsList />
+                <ProductsList session={session} page={currentPage} />
             </Suspense>
         </div>
     );
 }
 
-async function ProductsList() {
-    const session = await getServerSession(auth);
+
+async function ProductsList({ session, page }: { session: any; page: number }) {
     const backendUrl = session?.user?.callbackUrl || "";
-    const { data: products } = await getAdminProducts(1, 25);
+    const { data: products, meta } = await getAdminProducts(page, 10);
+
 
     return (
         <div className="flex flex-col gap-3">
@@ -72,7 +84,7 @@ async function ProductsList() {
                                 </div>
                                 <div className="flex flex-col">
                                     <span className="text-[9px] font-black text-blue-500 uppercase tracking-widest">
-                                        {product.barcode || "SEM CÓDIGO"}
+                                        {product.sku || "SEM CÓDIGO"}
                                     </span>
                                     <h3 className="font-bold text-slate-900 text-sm leading-tight max-w-[140px] truncate">{product.title}</h3>
                                     <span className="text-slate-900 font-black text-lg mt-1">
@@ -81,8 +93,15 @@ async function ProductsList() {
                                 </div>
                             </div>
                             <div className="flex flex-col items-end gap-3">
-                                <div className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase ${stock > 0 ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-rose-50 text-rose-600 border border-rose-100'}`}>
-                                    {stock} NO ESTOQUE
+                                <div className="flex items-center gap-2">
+                                    <div className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase ${stock > 0 || (product.variants?.reduce((acc, v) => acc + v.quantity, 0) || 0) > 0 ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-rose-50 text-rose-600 border border-rose-100'}`}>
+                                        {stock > 0 || (product.variants?.some(v => v.quantity > 0))
+                                            ? (product.variants && product.variants.length > 0
+                                                ? `${product.variants.reduce((acc, v) => acc + v.quantity, 0)} un`
+                                                : `${stock} un`)
+                                            : "SEM ESTOQUE"
+                                        }
+                                    </div>
                                 </div>
                                 <div className="flex gap-2">
                                     <Link href={`/dashboard/products/${product.id}/edit`} className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 hover:text-blue-600 transition-colors">
@@ -101,9 +120,35 @@ async function ProductsList() {
                     Nenhum produto encontrado.
                 </div>
             )}
+
+            {meta.totalPages > 1 && (
+                <div className="flex items-center justify-between pt-6 border-t border-slate-100 mt-4">
+                    <Link
+                        href={`/dashboard/products?page=${Math.max(1, page - 1)}`}
+                        className={`flex items-center gap-2 px-4 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all active:scale-95 ${page > 1 ? 'bg-white border-2 border-slate-100 text-slate-600' : 'bg-slate-50 text-slate-300 pointer-events-none'}`}
+                    >
+                        <ChevronLeft className="w-4 h-4" />
+                        Anterior
+                    </Link>
+
+                    <div className="flex flex-col items-center">
+                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Página</span>
+                        <span className="text-sm font-black text-slate-900">{page} <span className="text-slate-300 mx-1">/</span> {meta.totalPages}</span>
+                    </div>
+
+                    <Link
+                        href={`/dashboard/products?page=${Math.min(meta.totalPages, page + 1)}`}
+                        className={`flex items-center gap-2 px-4 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all active:scale-95 ${page < meta.totalPages ? 'bg-white border-2 border-slate-100 text-slate-600' : 'bg-slate-50 text-slate-300 pointer-events-none'}`}
+                    >
+                        Próxima
+                        <ChevronRight className="w-4 h-4" />
+                    </Link>
+                </div>
+            )}
         </div>
     );
 }
+
 
 function ProductsSkeleton() {
     return (

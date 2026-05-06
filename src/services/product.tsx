@@ -31,6 +31,7 @@ export async function getAdminProducts(page: number = 1, limit: number = 10, sea
             }
         });
         if (!res.ok) throw new Error("Failed to fetch admin products");
+
         return await res.json();
     } catch (error) {
         console.error("[Service Product] getAdminProducts Error:", error);
