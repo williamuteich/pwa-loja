@@ -49,7 +49,6 @@ export const ProductMedia: React.FC<ProductMediaProps> = ({
             URL.revokeObjectURL(imgToRemove.url);
         }
 
-        // Remove também da lista de arquivos reais
         if (typeof setImageFiles === 'function') {
             setImageFiles((prev) => prev.filter((_, i) => i !== index));
         }

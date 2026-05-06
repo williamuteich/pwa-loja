@@ -18,12 +18,15 @@ export interface Product {
     costPrice?: number | null;
     promotionStart?: string | null;
     promotionEnd?: string | null;
+    brandId?: string | null;
+    categoryIds?: string[];
 }
 
 export interface ProductVariant {
+    stock?: number | null;
     id: string;
     name: string;
-    color: string;
+    color?: string | null;
     quantity: number;
     productId: string;
 }

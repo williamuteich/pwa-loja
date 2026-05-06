@@ -12,12 +12,20 @@ import { ProductVisibility } from "@/src/app/components/ProductForm/ProductVisib
 import { useState, useEffect } from "react";
 import { Product } from "@/src/types/products/product";
 import { createProduct } from "@/src/services/product";
+import { getAdminCategories } from "@/src/services/category";
+import { getAdminBrands } from "@/src/services/brand";
 import { useRouter } from "next/navigation";
+import { Category } from "@/src/types/products/category";
+import { Brand } from "@/src/types/products/brand";
 
 export default function NewProductPage() {
     const router = useRouter();
     const [isMounted, setIsMounted] = useState(false);
     const [loading, setLoading] = useState(false);
+
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [brands, setBrands] = useState<Brand[]>([]);
+
     const [imageFiles, setImageFiles] = useState<File[]>([]);
     const [product, setProduct] = useState<Product>({
         id: "",
@@ -36,15 +44,31 @@ export default function NewProductPage() {
         promotionStart: null,
         promotionEnd: null,
         isActive: true,
+        brandId: null,
+        categoryIds: [],
         createdAt: ""
     });
 
     useEffect(() => {
-        setIsMounted(true);
+        const fetchData = async () => {
+            try {
+                const [catsRes, brdsRes] = await Promise.all([
+                    getAdminCategories(1, 250),
+                    getAdminBrands(1, 250)
+                ]);
+                setCategories(catsRes.data || []);
+                setBrands(brdsRes.data || []);
+            } catch (error) {
+                console.error("Erro ao buscar categorias/marcas admin:", error);
+            } finally {
+                setIsMounted(true);
+            }
+        };
+        fetchData();
     }, []);
 
     if (!isMounted) {
-        return <div className="min-h-screen bg-slate-50" />;
+        return <div className="min-h-screen bg-slate-50 flex items-center justify-center font-black text-slate-400 uppercase tracking-widest animate-pulse">Carregando...</div>;
     }
 
     const handleSubmit = async () => {
@@ -62,18 +86,30 @@ export default function NewProductPage() {
             formData.append("price", (product.price || 0).toString());
             formData.append("quantity", finalQuantity.toString());
             formData.append("isActive", String(product.isActive));
-            formData.append("sku", product.sku || "");
-            formData.append("specs", JSON.stringify(product.specs || {}));
-            formData.append("variants", JSON.stringify(product.variants || []));
+            formData.append("barcode", product.barcode || "");
+            formData.append("costPrice", (product.costPrice || 0).toString());
+
+            if (product.brandId) {
+                formData.append("brandId", product.brandId);
+            }
+            formData.append("categoryIds", JSON.stringify(product.categoryIds || []));
+
+            const specsString = Object.entries(product.specs || {})
+                .filter(([key]) => key !== 'brand')
+                .map(([key, val]) => `${key}: ${val}`)
+                .join(", ");
+            formData.append("specs", specsString);
+
+            const mappedVariants = (product.variants || []).map(v => ({
+                name: v.name,
+                color: v.color,
+                quantity: v.stock
+            }));
+            formData.append("variants", JSON.stringify(mappedVariants));
 
             imageFiles.forEach((file) => {
-                formData.append("images", file);
+                formData.append("files", file);
             });
-
-            console.log("--- ENVIANDO PARA O BACKEND ---");
-            for (const pair of formData.entries()) {
-                console.log(pair[0] + ': ' + pair[1]);
-            }
 
             const result = await createProduct(formData);
 
@@ -118,7 +154,12 @@ export default function NewProductPage() {
                 <ProductInfo product={product} setProduct={setProduct} />
                 <ProductPricing product={product} setProduct={setProduct} />
                 <ProductInventory product={product} setProduct={setProduct} />
-                <ProductClassification product={product} setProduct={setProduct} />
+                <ProductClassification
+                    product={product}
+                    setProduct={setProduct}
+                    categories={categories}
+                    brands={brands}
+                />
                 <ProductVariants product={product} setProduct={setProduct} />
                 <ProductVisibility product={product} setProduct={setProduct} />
             </div>
