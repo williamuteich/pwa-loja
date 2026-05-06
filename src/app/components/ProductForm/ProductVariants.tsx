@@ -1,8 +1,8 @@
 import React from "react";
 import { Plus, Trash2, Box } from "lucide-react";
-import { ProductVariantsProps } from "@/src/types/products/product";
+import { ProductFormSectionProps } from "@/src/types/products/product";
 
-export const ProductVariants: React.FC<ProductVariantsProps> = ({
+export const ProductVariants: React.FC<ProductFormSectionProps> = ({
     product,
     setProduct,
 }) => {

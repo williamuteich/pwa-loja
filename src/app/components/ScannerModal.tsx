@@ -2,11 +2,7 @@
 
 import { UnifiedScanner } from "./UnifiedScanner"
 
-interface ScannerModalProps {
-    isOpen: boolean
-    onClose: () => void
-    onScan: (text: string) => void
-}
+import { ScannerModalProps } from "@/src/types/ui/modals"
 
 export function ScannerModal({ isOpen, onClose, onScan }: ScannerModalProps) {
     if (!isOpen) return null

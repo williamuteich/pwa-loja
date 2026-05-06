@@ -1,8 +1,8 @@
 import React from "react";
 import { AlignLeft } from "lucide-react";
-import { ProductInfoProps } from "@/src/types/products/product";
+import { ProductFormSectionProps } from "@/src/types/products/product";
 
-export const ProductInfo: React.FC<ProductInfoProps> = ({
+export const ProductInfo: React.FC<ProductFormSectionProps> = ({
     product,
     setProduct,
 }) => {

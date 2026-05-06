@@ -1,7 +1,7 @@
 import React from "react";
-import { ProductPricingProps } from "@/src/types/products/product";
+import { ProductFormSectionProps } from "@/src/types/products/product";
 
-export const ProductPricing: React.FC<ProductPricingProps> = ({
+export const ProductPricing: React.FC<ProductFormSectionProps> = ({
     product,
     setProduct,
 }) => {

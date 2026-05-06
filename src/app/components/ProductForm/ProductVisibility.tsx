@@ -1,8 +1,8 @@
 import React from "react";
 import { Globe, Settings } from "lucide-react";
-import { ProductVisibilityProps } from "@/src/types/products/product";
+import { ProductFormSectionProps } from "@/src/types/products/product";
 
-export const ProductVisibility: React.FC<ProductVisibilityProps> = ({
+export const ProductVisibility: React.FC<ProductFormSectionProps> = ({
     product,
     setProduct,
 }) => {

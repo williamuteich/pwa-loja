@@ -86,46 +86,21 @@ export interface ProductsClientProps {
     title?: ReactNode;
     subtitle?: string;
 }
-
-export interface ProductVariantsProps {
+export interface ProductFormSectionProps {
     product: Product;
     setProduct: React.Dispatch<React.SetStateAction<Product>>;
 }
 
-export interface ProductVisibilityProps {
-    product: Product;
-    setProduct: React.Dispatch<React.SetStateAction<Product>>;
-}
-
-export interface ProductItemProps {
-    product: Product
-    backendUrl: string
-}
-
-export interface ProductInfoProps {
-    product: Product;
-    setProduct: React.Dispatch<React.SetStateAction<Product>>;
-}
-
-export interface ProductPricingProps {
-    product: Product;
-    setProduct: React.Dispatch<React.SetStateAction<Product>>;
-}
-
-export interface ProductMediaProps {
-    product: Product;
-    setProduct: React.Dispatch<React.SetStateAction<Product>>;
+export interface ProductMediaProps extends ProductFormSectionProps {
     setImageFiles: React.Dispatch<React.SetStateAction<File[]>>;
 }
 
-export interface ProductInventoryProps {
-    product: Product;
-    setProduct: React.Dispatch<React.SetStateAction<Product>>;
-}
-
-export interface ProductClassificationProps {
-    product: Product;
-    setProduct: React.Dispatch<React.SetStateAction<Product>>;
+export interface ProductClassificationProps extends ProductFormSectionProps {
     categories: Category[];
     brands: Brand[];
+}
+
+export interface ProductItemProps {
+    product: Product;
+    backendUrl: string;
 }

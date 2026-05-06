@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Barcode, Box, Scan, Hash } from "lucide-react";
 import { ScannerModal } from "@/src/app/components/ScannerModal";
-import { ProductInventoryProps } from "@/src/types/products/product";
+import { ProductFormSectionProps } from "@/src/types/products/product";
 
-export const ProductInventory: React.FC<ProductInventoryProps> = ({
+export const ProductInventory: React.FC<ProductFormSectionProps> = ({
     product,
     setProduct,
 }) => {

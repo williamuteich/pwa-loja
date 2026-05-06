@@ -5,13 +5,6 @@ import { useState, useEffect, useRef } from "react"
 import { Html5Qrcode } from "html5-qrcode"
 import { ManualInputModal } from "./ManualInputModal"
 
-interface UnifiedScannerProps {
-    onScan: (text: string) => void
-    onClose: () => void
-    title?: string
-    isPage?: boolean
-}
-
 export function UnifiedScanner({ onScan, onClose, title = "Escanear Produto", isPage = false }: UnifiedScannerProps) {
     const [isScannerReady, setIsScannerReady] = useState(false)
     const [isFlashOn, setIsFlashOn] = useState(false)
