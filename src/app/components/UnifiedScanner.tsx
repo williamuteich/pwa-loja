@@ -29,8 +29,7 @@ export function UnifiedScanner({ onScan, onClose, title = "Escanear Produto", is
             await html5QrCodeRef.current.start(
                 { facingMode: "environment" },
                 {
-                    fps: 15,
-                    qrbox: 250
+                    fps: 15
                 },
                 (text) => {
                     onScan(text)
@@ -45,7 +44,7 @@ export function UnifiedScanner({ onScan, onClose, title = "Escanear Produto", is
                 if (html5QrCodeRef.current) {
                     await html5QrCodeRef.current.start(
                         { facingMode: "user" },
-                        { fps: 15, qrbox: 250 },
+                        { fps: 15 },
                         (text) => {
                             onScan(text)
                             if (!isPage) stopScanner()

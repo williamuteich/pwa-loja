@@ -9,7 +9,7 @@ import {
     AlertCircle
 } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { useSession } from "next-auth/react"
 import { createStockMovement, getProductByIdentifier } from "@/src/services/stock"
 import { Product } from "@/src/types/products/product"
@@ -24,6 +24,7 @@ export default function ScanPage() {
     const [quantity, setQuantity] = useState(1)
     const [note, setNote] = useState("")
     const [status, setStatus] = useState<{ type: "success" | "error", message: string } | null>(null)
+    const scanLockRef = useRef(false)
 
     const getImageUrl = (url?: string) => {
         if (!url) return null
@@ -33,6 +34,9 @@ export default function ScanPage() {
     }
 
     const handleScan = async (code: string) => {
+        if (scanLockRef.current) return;
+        scanLockRef.current = true;
+
         setLoading(true)
         const product = await getProductByIdentifier(code)
         if (product && !product.error) {
@@ -40,9 +44,20 @@ export default function ScanPage() {
             setStatus({ type: "success", message: "Produto identificado" })
         } else {
             setStatus({ type: "error", message: "Produto não encontrado" })
-            setTimeout(() => setStatus(null), 3000)
+            setTimeout(() => {
+                setStatus(null);
+                scanLockRef.current = false;
+            }, 3000)
         }
         setLoading(false)
+    }
+
+    const resetScan = () => {
+        setScannedProduct(null)
+        setAdjustmentMode(null)
+        setQuantity(1)
+        setStatus(null)
+        scanLockRef.current = false
     }
 
     const handleApplyAdjustment = async () => {
@@ -59,10 +74,7 @@ export default function ScanPage() {
         if (!res.error) {
             setStatus({ type: "success", message: "Estoque atualizado!" })
             setTimeout(() => {
-                setScannedProduct(null)
-                setAdjustmentMode(null)
-                setQuantity(1)
-                setStatus(null)
+                resetScan()
             }, 1500)
         } else {
             setStatus({ type: "error", message: res.error })
@@ -93,35 +105,38 @@ export default function ScanPage() {
                         )}
 
                         {!adjustmentMode ? (
-                            <div className="bg-white p-5 rounded-[32px] flex items-center gap-5 shadow-2xl animate-in slide-in-from-bottom-10 border-4 border-emerald-500/20 backdrop-blur-xl">
-                                <div className="w-16 h-16 rounded-2xl bg-slate-50 flex items-center justify-center border border-slate-100 shrink-0 overflow-hidden">
-                                    {scannedProduct.images && scannedProduct.images.length > 0 ? (
-                                        <img
-                                            src={getImageUrl(scannedProduct.images[0].url) || ""}
-                                            alt={scannedProduct.title}
-                                            className="w-full h-full object-cover"
-                                        />
-                                    ) : (
-                                        <Package className="w-8 h-8 text-slate-300" />
-                                    )}
+                            <div className="bg-white p-6 rounded-[32px] flex flex-col gap-6 shadow-2xl animate-in slide-in-from-bottom-10 border-4 border-emerald-500/20 backdrop-blur-xl mx-2">
+                                <div className="flex flex-col items-center text-center">
+                                    <div className="w-32 h-32 rounded-3xl bg-slate-50 flex items-center justify-center border border-slate-100 overflow-hidden shadow-sm mb-4">
+                                        {scannedProduct.images && scannedProduct.images.length > 0 ? (
+                                            <img
+                                                src={getImageUrl(scannedProduct.images[0].url) || ""}
+                                                alt={scannedProduct.title}
+                                                className="w-full h-full object-cover"
+                                            />
+                                        ) : (
+                                            <Package className="w-12 h-12 text-slate-300" />
+                                        )}
+                                    </div>
+                                    <span className="text-[10px] font-black uppercase bg-blue-50 text-blue-600 px-3 py-1 rounded-full border border-blue-100 tracking-widest mb-2">{scannedProduct.sku || "PRODUTO IDENTIFICADO"}</span>
+                                    <h3 className="font-black text-slate-900 text-xl leading-tight mb-2">{scannedProduct.title}</h3>
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-slate-400 text-xs font-black uppercase tracking-widest">Estoque Atual:</span>
+                                        <p className="text-2xl font-black text-slate-900 leading-none">{scannedProduct.quantity || 0} <span className="text-xs text-slate-400 uppercase tracking-tighter">UN</span></p>
+                                    </div>
                                 </div>
-                                <div className="flex-1 min-w-0">
-                                    <span className="text-[9px] font-black uppercase text-blue-500 tracking-widest">{scannedProduct.sku || "PRODUTO IDENTIFICADO"}</span>
-                                    <h3 className="font-black text-slate-900 text-base leading-tight truncate">{scannedProduct.title}</h3>
-                                    <p className="text-xl font-black text-slate-900 leading-none mt-1">{scannedProduct.quantity || 0} <span className="text-[10px] text-slate-400 uppercase tracking-tighter">UN</span></p>
-                                </div>
-                                <div className="flex flex-col gap-2">
+                                <div className="flex gap-3 mt-2">
                                     <button
-                                        onClick={() => setAdjustmentMode("IN")}
-                                        className="bg-slate-900 text-white px-6 py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl active:scale-95 transition-all"
+                                        onClick={resetScan}
+                                        className="flex-1 bg-slate-50 text-slate-400 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest active:scale-95 transition-all border border-slate-100"
                                     >
-                                        Ajustar
+                                        Cancelar
                                     </button>
                                     <button
-                                        onClick={() => setScannedProduct(null)}
-                                        className="bg-slate-50 text-slate-400 px-4 py-2 rounded-xl text-[8px] font-black uppercase tracking-widest active:scale-95 transition-all"
+                                        onClick={() => setAdjustmentMode("IN")}
+                                        className="flex-[2] bg-slate-900 text-white py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl active:scale-95 transition-all"
                                     >
-                                        Voltar
+                                        Ajustar Estoque
                                     </button>
                                 </div>
                             </div>
