@@ -68,6 +68,12 @@ export default function EditProductPage() {
                 setBackendUrl(urlRes);
                 
                 if (prodRes) {
+                    if (prodRes.variants) {
+                        prodRes.variants = prodRes.variants.map((v: any) => ({
+                            ...v,
+                            stock: v.quantity
+                        }));
+                    }
                     setProduct(prodRes);
                 } else {
                     alert("Produto não encontrado.");
@@ -166,7 +172,7 @@ export default function EditProductPage() {
                 <button
                     onClick={handleSubmit}
                     disabled={loading}
-                    className="px-4 py-2 bg-slate-900 text-white rounded-xl text-xs font-black uppercase tracking-widest active:scale-95 transition-all flex items-center gap-2 disabled:opacity-50"
+                    className="px-4 py-3.5 bg-slate-900 text-white rounded-xl text-xs font-black uppercase tracking-widest active:scale-95 transition-all flex items-center gap-2 disabled:opacity-50"
                 >
                     <Save className="w-3.5 h-3.5" />
                     {loading ? "Atualizando..." : "Atualizar"}
