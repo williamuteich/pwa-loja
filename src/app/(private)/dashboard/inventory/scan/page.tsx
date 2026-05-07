@@ -85,7 +85,7 @@ export default function ScanPage() {
     return (
         <div className="flex flex-col min-h-screen bg-black overflow-hidden relative text-white">
             {!scannedProduct && (
-                <UnifiedScanner 
+                <UnifiedScanner
                     onScan={handleScan}
                     onClose={() => router.back()}
                     title="Ajuste de Estoque"
@@ -134,7 +134,7 @@ export default function ScanPage() {
                                     </button>
                                     <button
                                         onClick={() => setAdjustmentMode("IN")}
-                                        className="flex-[2] bg-slate-900 text-white py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl active:scale-95 transition-all"
+                                        className="flex-2 bg-slate-900 text-white py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl active:scale-95 transition-all"
                                     >
                                         Ajustar Estoque
                                     </button>

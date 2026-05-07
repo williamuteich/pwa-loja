@@ -37,7 +37,7 @@ export function ButtonLogin() {
 
 export function ButtonLogout() {
     return (
-        <button onClick={() => signOut({ callbackUrl: "/" })} className="flex items-center gap-2 text-slate-400 font-bold text-[10px] uppercase tracking-widest hover:text-rose-500 transition-colors">
+        <button onClick={() => signOut({ callbackUrl: "/login" })} className="flex items-center gap-2 text-slate-400 font-bold text-[10px] uppercase tracking-widest hover:text-rose-500 transition-colors">
             <LogOut className="w-3 h-3" />
             Encerrar Sessão
         </button>
