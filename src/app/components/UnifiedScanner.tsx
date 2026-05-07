@@ -1,6 +1,6 @@
 "use client"
 
-import { X, ArrowLeft, QrCode, Zap, ZapOff, RefreshCcw, Barcode } from "lucide-react"
+import { X, ArrowLeft, QrCode, Zap, ZapOff, RefreshCcw, Barcode, Keyboard } from "lucide-react"
 import { useState, useEffect, useRef } from "react"
 import { Html5Qrcode } from "html5-qrcode"
 import { ManualInputModal } from "./ManualInputModal"
@@ -81,6 +81,38 @@ export function UnifiedScanner({ onScan, onClose, title = "Escanear Produto", is
 
     return (
         <div className={`fixed inset-0 z-9999 flex flex-col bg-black animate-in fade-in duration-200`}>
+            <style>{`
+                #unified-reader {
+                    position: absolute !important;
+                    inset: 0 !important;
+                    width: 100% !important;
+                    height: 100% !important;
+                    border: none !important;
+                    overflow: hidden !important;
+                    background: black !important;
+                }
+                #unified-reader__scan_region {
+                    position: absolute !important;
+                    inset: 0 !important;
+                    width: 100% !important;
+                    height: 100% !important;
+                    border: none !important;
+                    padding: 0 !important;
+                    min-height: unset !important;
+                }
+                #unified-reader__scan_region video {
+                    position: absolute !important;
+                    inset: 0 !important;
+                    width: 100% !important;
+                    height: 100% !important;
+                    object-fit: cover !important;
+                    transform: none !important;
+                }
+                #unified-reader__dashboard { display: none !important; }
+                #unified-reader__scan_region img { display: none !important; }
+                #unified-reader__scan_region canvas { display: none !important; }
+            `}</style>
+
             <div id="unified-reader" className="absolute inset-0 z-0 h-full w-full"></div>
 
             <div className="absolute inset-0 z-10 pointer-events-none flex items-center justify-center">
@@ -100,7 +132,7 @@ export function UnifiedScanner({ onScan, onClose, title = "Escanear Produto", is
                 </p>
             </div>
 
-            <div className="absolute top-0 inset-x-0 z-30 p-6 flex items-center justify-between bg-linear-to-b from-black/80 to-transparent">
+            <div className="absolute top-0 inset-x-0 z-50 p-6 flex items-center justify-between bg-linear-to-b from-black/80 to-transparent">
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-emerald-500 rounded-2xl flex items-center justify-center text-white shadow-lg">
                         <QrCode className="w-6 h-6" />
@@ -108,12 +140,20 @@ export function UnifiedScanner({ onScan, onClose, title = "Escanear Produto", is
                     <div>
                         <h2 className="text-white text-sm font-black uppercase tracking-widest leading-none mb-1">{title}</h2>
                         <div className="flex items-center gap-1.5">
-                            <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></div>
-                            <span className="text-emerald-400/80 text-[8px] font-bold uppercase tracking-widest">Scanner Ativo</span>
+                            <div className={`w-1.5 h-1.5 rounded-full ${isScannerReady ? 'bg-emerald-400 animate-pulse' : 'bg-slate-500'}`}></div>
+                            <span className={`text-[8px] font-bold uppercase tracking-widest ${isScannerReady ? 'text-emerald-400/80' : 'text-slate-400'}`}>
+                                {isScannerReady ? "Scanner Ativo" : "Iniciando..."}
+                            </span>
                         </div>
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
+                    <button
+                        onClick={() => setIsManualInputOpen(true)}
+                        className="w-10 h-10 bg-white/10 hover:bg-white/20 backdrop-blur-xl border border-white/10 rounded-2xl flex items-center justify-center text-white transition-all active:scale-90"
+                    >
+                        <Keyboard className="w-5 h-5" />
+                    </button>
                     <button
                         onClick={toggleFlash}
                         className={`w-10 h-10 backdrop-blur-xl border border-white/10 rounded-2xl flex items-center justify-center transition-all active:scale-90 ${isFlashOn ? 'bg-amber-400 text-slate-900 border-amber-300' : 'bg-white/10 text-white'}`}

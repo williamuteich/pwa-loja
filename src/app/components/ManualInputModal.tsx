@@ -1,8 +1,7 @@
 "use client"
 
-import { Barcode } from "lucide-react"
+import { Barcode, X } from "lucide-react"
 import { useState } from "react"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 
 import { ManualInputModalProps } from "@/src/types/ui/modals"
 
@@ -16,23 +15,30 @@ export function ManualInputModal({
     const [ean, setEan] = useState("")
     const [sku, setSku] = useState("")
 
+    if (!isOpen) return null;
+
     return (
-        <Dialog open={isOpen} onOpenChange={(open) => {
-            if (!open) {
-                setEan("")
-                setSku("")
-                onClose()
-            }
-        }}>
-            <DialogContent className="bg-white rounded-[32px] p-8 max-w-sm border-none shadow-2xl [&>button]:right-6 [&>button]:top-6 [&>button]:w-10 [&>button]:h-10 [&>button]:bg-slate-50 [&>button]:rounded-2xl [&>button]:flex [&>button]:items-center [&>button]:justify-center [&>button]:text-slate-400 [&>button]:opacity-100 [&>button]:ring-0 [&>button]:outline-none">
-                <DialogHeader className="mb-4 text-left">
-                    <DialogTitle className="text-xl font-black text-slate-900 tracking-tight leading-tight text-left">
+        <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-md animate-in fade-in duration-200">
+            <div className="bg-white rounded-[32px] p-8 w-full max-w-sm shadow-2xl relative animate-in zoom-in-95 duration-200">
+                <button
+                    onClick={() => {
+                        setEan("")
+                        setSku("")
+                        onClose()
+                    }}
+                    className="absolute right-6 top-6 w-10 h-10 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-400 active:scale-95 transition-all"
+                >
+                    <X className="w-5 h-5" />
+                </button>
+
+                <div className="mb-6">
+                    <h2 className="text-xl font-black text-slate-900 tracking-tight leading-tight pr-12">
                         {title}
-                    </DialogTitle>
-                    <DialogDescription className="text-slate-500 text-[10px] font-bold uppercase tracking-widest text-left mt-1">
+                    </h2>
+                    <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mt-1">
                         {description}
-                    </DialogDescription>
-                </DialogHeader>
+                    </p>
+                </div>
 
                 <div className="space-y-6">
                     <div className="space-y-2">
@@ -82,7 +88,7 @@ export function ManualInputModal({
                         </button>
                     </div>
                 </div>
-            </DialogContent>
-        </Dialog>
+            </div>
+        </div>
     )
 }

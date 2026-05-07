@@ -67,6 +67,7 @@ function InventoryLinkContent() {
 
     const handleScan = (code: string) => {
         setScannedCode(code)
+        setIsScannerOpen(false)
     }
 
     const handleSave = async (type: "EAN" | "SKU") => {
