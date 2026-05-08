@@ -122,7 +122,9 @@ export default function ScanPage() {
                                     <h3 className="font-black text-slate-900 text-xl leading-tight mb-2">{scannedProduct.title}</h3>
                                     <div className="flex items-center gap-2">
                                         <span className="text-slate-400 text-xs font-black uppercase tracking-widest">Estoque Atual:</span>
-                                        <p className="text-2xl font-black text-slate-900 leading-none">{scannedProduct.quantity || 0} <span className="text-xs text-slate-400 uppercase tracking-tighter">UN</span></p>
+                                        <p className="text-2xl font-black text-slate-900 leading-none">
+                                            {(scannedProduct.quantity || 0) + (scannedProduct.variants?.reduce((sum, v) => sum + (v.quantity || 0), 0) || 0)} <span className="text-xs text-slate-400 uppercase tracking-tighter">UN</span>
+                                        </p>
                                     </div>
                                 </div>
                                 <div className="flex gap-3 mt-2">
