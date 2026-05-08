@@ -11,6 +11,7 @@ async function getApiUrl() {
 
 export async function createStockMovement(data: {
     productId: string;
+    variantId?: string;
     type: "IN" | "OUT";
     quantity: number;
     note?: string;
